@@ -5,13 +5,17 @@
 {%- if sqldeveloper.source_url is defined %}
 
   {%- set archive_file = sqldeveloper.prefix + '/' + sqldeveloper.source_url.split('/') | last %}
+  {%- set extract_dir  = sqldeveloper.prefix + '/sqldeveloper' %} 
 
-libaio1:
-  pkg.installed
+sqldeveloper-libaio1:
+  pkg.installed:
+    - name: libaio1
 
 sqldeveloper-install-dir:
   file.directory:
-    - name: {{ sqldeveloper.prefix }}
+    - names:
+      - {{ sqldeveloper.prefix }}
+      - {{ sqldeveloper.orahome }}
     - user: root
     - group: root
     - mode: 755
@@ -20,46 +24,43 @@ sqldeveloper-install-dir:
 download-sqldeveloper-archive:
   cmd.run:
     - name: curl {{ sqldeveloper.dl_opts }} -o '{{ archive_file }}' '{{ sqldeveloper.source_url }}'
-    - unless: test -d {{ sqldeveloper.sqldeveloper_real_home }} || test -f {{ archive_file }}
     - require:
-      - file: sqldeveloper-install-dir
+      - sqldeveloper-install-dir
 
-unpack-sqldeveloper-archive:
+unpack-sqldeveloper-archive-to-realhome:
   archive.extracted:
     - name: {{ sqldeveloper.prefix }}
     - source: file://{{ archive_file }}
-    {%- if sqldeveloper.source_hash3 %}
-    - source_hash: sha256={{ sqldeveloper.source_hash3 }}
+    {%- if sqldeveloper.source_hash %}
+    - source_hash: md5={{ sqldeveloper.source_hash }}
     {%- endif %}
     - archive_format: {{ sqldeveloper.archive_type }}
     - options: {{ sqldeveloper.unpack_opts }}
     - user: root
     - group: root
-    - if_missing: {{ sqldeveloper.sqldeveloper_real_home }}
+    - if_missing: {{ extract_dir }}
     - onchanges:
-      - cmd: download-instantclient-devel-tarball
+      - cmd: download-sqldeveloper-archive
+  file.absent:
+    - name: {{ sqldeveloper.sqldeveloper_real_home }}
+    - require:
+      - archive: unpack-sqldeveloper-archive-to-realhome
+  cmd.run:
+    - name: mv {{ extract_dir }} {{ sqldeveloper.sqldeveloper_real_home }}
+    - require:
+      - file: unpack-sqldeveloper-archive-to-realhome
 
 update-sqldeveloper-home-symlink:
   file.symlink:
-    - name: {{ sqldeveloper.sqldeveloper_home }}
+    - name: {{ sqldeveloper.orahome }}/sqldeveloper
     - target: {{ sqldeveloper.sqldeveloper_real_home }}
     - force: True
     - require:
-      - unpack-instantclient-basic-tarball
-      - unpack-instantclient-sqldeveloper-tarball
-      - unpack-instantclient-devel-tarball
+      - cmd: unpack-sqldeveloper-archive-to-realhome
 
-remove-instantclient-basic-tarball:
+remove-sqldeveloper-archive:
   file.absent:
-    - name: {{ archive_file1 }}
-
-remove-instantclient-sqldeveloper-tarball:
-  file.absent:
-    - name: {{ archive_file2 }}
-
-remove-instantclient-devel-tarball:
-  file.absent:
-    - name: {{ archive_file3 }}
+    - name: {{ archive_file }}
 
 include:
   - sqldeveloper.env

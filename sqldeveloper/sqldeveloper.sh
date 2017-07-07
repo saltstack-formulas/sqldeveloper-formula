@@ -1,4 +1,5 @@
 {%- from 'sqldeveloper/settings.sls' import sqldeveloper with context %}
 
-export SQLDEVELOPER_HOME={{ sqldeveloper.sqldeveloper_home }}
-export PATH=$SQLDEVELOPER_HOME:$PATH
+export ORACLE_HOME={{ sqldeveloper.orahome }}
+export SQLDEVELOPER_HOME={{ sqldeveloper.orahome }}/sqldeveloper
+export PATH=${ORACLE_HOME}:${SQLDEVELOPER_HOME}:$PATH

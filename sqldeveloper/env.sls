@@ -9,13 +9,15 @@ sqldeveloper-config:
     - user: root
     - group: root
     - context:
-      sqldeveloper_home: {{ sqldeveloper.sqldeveloper_home }}
+      orahome: {{ sqldeveloper.orahome }}/sqldeveloper
+    - require:
+      - update-sqldeveloper-home-symlink
 
 # Add sqldeveloper to alternatives system
 sqldeveloperhome-alt-install:
   alternatives.install:
     - name: sqldeveloper-home
-    - link: {{ sqldeveloper.sqldeveloper_home }}
+    - link: {{ sqldeveloper.orahome }}/sqldeveloper
     - path: {{ sqldeveloper.sqldeveloper_real_home }}
     - priority: 30
     - require:
@@ -27,7 +29,7 @@ sqldeveloper-alt-install:
     - link: {{ sqldeveloper.sqldeveloper_symlink }}
     - path: {{ sqldeveloper.sqldeveloper_realcmd }}
     - priority: 30
-    - onlyif: test -d {{ sqldeveloper.sqldeveloper_real_home }} && test ! -L {{ sqldeveloper.sqldeveloper_home }}
+    - onlyif: test -d {{ sqldeveloper.sqldeveloper_real_home }}
     - require:
       - update-sqldeveloper-home-symlink
 
@@ -36,14 +38,14 @@ sqldeveloperhome-alt-set:
   alternatives.set:
   - name: sqldeveloper-home
   - path: {{ sqldeveloper.sqldeveloper_real_home }}
-  - onchanges:
+  - require:
     - sqldeveloperhome-alt-install
 
 sqldeveloper-alt-set:
   alternatives.set:
   - name: sqldeveloper
   - path: {{ sqldeveloper.sqldeveloper_realcmd }}
-  - onchanges:
+  - require:
     - sqldeveloper-alt-install
 
 # source PATH with JAVA_HOME
@@ -53,3 +55,4 @@ source_sqldeveloper_file:
   - cwd: /root
   - require:
     - update-sqldeveloper-home-symlink
+
