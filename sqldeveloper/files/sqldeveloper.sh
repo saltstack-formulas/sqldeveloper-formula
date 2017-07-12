@@ -1,0 +1,4 @@
+export ORACLE_HOME={{ orahome }}
+export SQLDEVELOPER_HOME={{ orahome }}/sqldeveloper
+export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:${SQLDEVELOPER_HOME}
+export PATH=${ORACLE_HOME}:${SQLDEVELOPER_HOME}:$PATH
