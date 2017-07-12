@@ -25,6 +25,12 @@ sqldeveloper-install-dir:
     - mode: 755
     - makedirs: True
 
+# curl fails (rc=23) if file exists
+{{ archive_file }}:
+  file.absent:
+    - require_in:
+      - download-sqldeveloper-archive
+
 download-sqldeveloper-archive:
   cmd.run:
     - name: curl {{ sqldeveloper.dl_opts }} -o '{{ archive_file }}' '{{ sqldeveloper.source_url }}'
@@ -54,6 +60,16 @@ update-sqldeveloper-home-symlink:
     - force: True
     - require:
       - unpack-sqldeveloper-archive-to-realhome
+      - sqldeveloper-desktop-entry
+
+#### Example requiring 'user' definition in pillar ##
+sqldeveloper-desktop-entry:
+  file.managed:
+    - source: salt://sqldeveloper/files/sqldeveloper.desktop
+    - name: /home/{{ pillar['user'] }}/Desktop/sqldeveloper.desktop
+    - user: {{ pillar['user'] }}
+    - group: {{ pillar['user'] }}
+    - mode: 755
 
 remove-sqldeveloper-archive:
   file.absent:
