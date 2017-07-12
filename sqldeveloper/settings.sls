@@ -2,13 +2,11 @@
 {% set g  = salt['grains.get']('sqldeveloper', {}) %}
 
 {%- set oracle_release = g.get('oracle_release', p.get('oracle_release', '12_2')) %}
-{%- set orahome = salt['grains.get']('orahome', salt['pillar.get']('orahome', '/opt/oracle/' + oracle_release + '/')) %}
+{%- set orahome = salt['grains.get']('orahome', salt['pillar.get']('orahome', '/opt/oracle/' + oracle_release + '/' )) %}
 
-{%- set release         = g.get('release', p.get('release', '4')) %}
 {%- set release         = g.get('release', p.get('release', '4')) %}
 {%- set minor           = g.get('minor', p.get('minor', '2'))  %}
 {%- set version         = g.get('version', p.get('version', release + '.' + minor + '.0.17.089.1709' )) %}
-{%- set version_name    = 'sqldeveloper_' + release + '_' + minor %}
 
 ## ######## YOU MUST CHANGE TO LOCAL MIRROR DUE TO LICENSE ACCEPTANCE/LOGIN REQ. ####### #}
 {%- set mirror  = 'http://download.oracle.com/otn/java/sqldeveloper/' %}
@@ -28,7 +26,7 @@
 {%- set default_unpack_opts  = '' %}
 {%- set default_dl_opts      = ' -s ' %}
 {%- set default_symlink      = '/usr/bin/sqldeveloper' %}
-{%- set default_real_home    = default_prefix + version_name %}
+{%- set default_real_home    = default_prefix + 'sqldeveloper' %}
 
 {%- set prefix                 = g.get('prefix', p.get('prefix', default_prefix )) %}
 {%- set dl_opts                = g.get('dl_opts', p.get('dl_opts', default_dl_opts )) %}

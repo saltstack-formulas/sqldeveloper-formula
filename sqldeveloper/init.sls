@@ -5,11 +5,15 @@
 {%- if sqldeveloper.source_url is defined %}
 
   {%- set archive_file = sqldeveloper.prefix + '/' + sqldeveloper.source_url.split('/') | last %}
-  {%- set extract_dir  = sqldeveloper.prefix + '/sqldeveloper' %} 
 
+#runtime dependency
 sqldeveloper-libaio1:
   pkg.installed:
+    {%- if salt['grains.get']('os') == 'Ubuntu' %}
     - name: libaio1
+    {%- else %}
+    - name: libaio
+    {%- endif %}
 
 sqldeveloper-install-dir:
   file.directory:
@@ -20,6 +24,12 @@ sqldeveloper-install-dir:
     - group: root
     - mode: 755
     - makedirs: True
+
+# curl fails (rc=23) if file exists
+{{ archive_file }}:
+  file.absent:
+    - require_in:
+      - download-sqldeveloper-archive
 
 download-sqldeveloper-archive:
   cmd.run:
@@ -38,17 +48,10 @@ unpack-sqldeveloper-archive-to-realhome:
     - options: {{ sqldeveloper.unpack_opts }}
     - user: root
     - group: root
-    - if_missing: {{ extract_dir }}
     - onchanges:
       - cmd: download-sqldeveloper-archive
-  file.absent:
-    - name: {{ sqldeveloper.sqldeveloper_real_home }}
     - require:
-      - archive: unpack-sqldeveloper-archive-to-realhome
-  cmd.run:
-    - name: mv {{ extract_dir }} {{ sqldeveloper.sqldeveloper_real_home }}
-    - require:
-      - file: unpack-sqldeveloper-archive-to-realhome
+      - download-sqldeveloper-archive
 
 update-sqldeveloper-home-symlink:
   file.symlink:
@@ -56,13 +59,23 @@ update-sqldeveloper-home-symlink:
     - target: {{ sqldeveloper.sqldeveloper_real_home }}
     - force: True
     - require:
-      - cmd: unpack-sqldeveloper-archive-to-realhome
+      - unpack-sqldeveloper-archive-to-realhome
+      - sqldeveloper-desktop-entry
+
+#### Example requiring 'user' definition in pillar ##
+sqldeveloper-desktop-entry:
+  file.managed:
+    - source: salt://sqldeveloper/files/sqldeveloper.desktop
+    - name: /home/{{ pillar['user'] }}/Desktop/sqldeveloper.desktop
+    - user: {{ pillar['user'] }}
+    - group: {{ pillar['user'] }}
+    - mode: 755
 
 remove-sqldeveloper-archive:
   file.absent:
     - name: {{ archive_file }}
 
 include:
-  - sqldeveloper.env
+- .env
 
 {%- endif %}
