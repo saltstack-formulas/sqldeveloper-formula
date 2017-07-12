@@ -3,7 +3,7 @@
 sqldeveloper-config:
   file.managed:
     - name: /etc/profile.d/sqldeveloper.sh
-    - source: salt://sqldeveloper/sqldeveloper.sh
+    - source: salt://sqldeveloper/files/sqldeveloper.sh
     - template: jinja
     - mode: 644
     - user: root
