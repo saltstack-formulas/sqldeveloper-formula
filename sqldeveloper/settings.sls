@@ -2,7 +2,7 @@
 {% set g  = salt['grains.get']('sqldeveloper', {}) %}
 
 {%- set oracle_release = g.get('oracle_release', p.get('oracle_release', '12_2')) %}
-{%- set orahome = salt['grains.get']('orahome', salt['pillar.get']('orahome', '/opt/oracle/' + oracle_release + '/')) %}
+{%- set orahome = salt['grains.get']('orahome', salt['pillar.get']('orahome', '/opt/oracle/' + oracle_release + '/' )) %}
 
 {%- set release         = g.get('release', p.get('release', '4')) %}
 {%- set minor           = g.get('minor', p.get('minor', '2'))  %}
