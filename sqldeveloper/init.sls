@@ -28,6 +28,8 @@ sqldeveloper-install-dir:
 # curl fails (rc=23) if file exists
 {{ archive_file }}:
   file.absent:
+    - require:
+      - sqldeveloper-install-dir
     - require_in:
       - download-sqldeveloper-archive
 
@@ -42,14 +44,12 @@ unpack-sqldeveloper-archive-to-realhome:
     - name: {{ sqldeveloper.prefix }}
     - source: file://{{ archive_file }}
     {%- if sqldeveloper.source_hash %}
-    - source_hash: md5={{ sqldeveloper.source_hash }}
+    - source_hash: {{ sqldeveloper.source_hash }}
     {%- endif %}
     - archive_format: {{ sqldeveloper.archive_type }}
     - options: {{ sqldeveloper.unpack_opts }}
     - user: root
     - group: root
-    - onchanges:
-      - cmd: download-sqldeveloper-archive
     - require:
       - download-sqldeveloper-archive
 
@@ -60,9 +60,7 @@ update-sqldeveloper-home-symlink:
     - force: True
     - require:
       - unpack-sqldeveloper-archive-to-realhome
-      - sqldeveloper-desktop-entry
 
-#### Example requiring 'user' definition in pillar ##
 sqldeveloper-desktop-entry:
   file.managed:
     - source: salt://sqldeveloper/files/sqldeveloper.desktop
@@ -70,12 +68,13 @@ sqldeveloper-desktop-entry:
     - user: {{ pillar['user'] }}
     - group: {{ pillar['user'] }}
     - mode: 755
+    - require:
+      - unpack-sqldeveloper-archive-to-realhome
 
 remove-sqldeveloper-archive:
   file.absent:
     - name: {{ archive_file }}
-
-include:
-- .env
-
+    - require:
+      - unpack-sqldeveloper-archive-to-realhome
+      
 {%- endif %}

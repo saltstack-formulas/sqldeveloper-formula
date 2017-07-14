@@ -1,8 +1,8 @@
 =============
-sqlplus-formula
+sqldeveloper-formula
 =============
 
-This formula will set up and configure Oracle SqlPlus client sourced from URL.
+This formula will set up and configure Oracle SqlDeveloper software sourced from URL.
 
 .. note::
 
@@ -15,23 +15,17 @@ Available states
 .. contents::
     :local:
 
-``sqlplus``
+``sqldeveloper``
 ---------
 
-Downloads zip archives from **sqlplus:source_url** and unpacks them.
+Downloads archives from **sqldeveloper:source_url** and unpacks them to oracle_home.
 
-- instantclient-basic-linux.x64
-- instantclient-sdk-linux.x64
-- instantclient-devel-linux.x64
-
-The formula also configures an alternatives path. The default vendor source URL requires credentials as download arguments.
-
-- The current default is **sqlplus:version** of 12.2 
-
-``sqlplus.env``
+``sqldeveloper.env``
 -------------
 
-Adds /etc/profile.d/sqlplus.sh, this includesd SQLPLUS__HOME in the PATH of any user.
+Full support for linux alternatives system.
+Adds /etc/profile.d/sqldeveloper.sh, setting SQLDEVELOPER_HOME, ORACLE_HOME, ./bin in user PATH.
+
 
 Please see the pillar.example for configuration.
 

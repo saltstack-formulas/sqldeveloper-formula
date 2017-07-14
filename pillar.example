@@ -7,9 +7,9 @@ sqldeveloper:
   source_url: http://download.oracle.com/otn/java/sqldeveloper/sqldeveloper-4.2.0.17.089.1709-no-jre.zip
   source_hash: http://download.oracle.com/otn/java/sqldeveloper/sqldeveloper-4.2.0.17.089.1709-no-jre.zip.sha256
   dl_opts: --no-check-certificate --no-cookies --header "Cookie: oraclelicense=accept-securebackup-cookie"
-  unpack_opts:
   archive_type: zip
   prefix: /usr/share/oracle/12_2
   sqldeveloper_real_home: /usr/share/oracle/12_2/sqldeveloper
   sqldeveloper_symlink: /usr/bin/sqldeveloper
   sqldeveloper_realcmd: /opt/oracle/12_2/sqldeveloper/bin/sqldeveloper
+  alt_priority: 30
