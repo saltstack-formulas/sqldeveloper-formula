@@ -47,7 +47,6 @@ unpack-sqldeveloper-archive-to-realhome:
     - source_hash: {{ sqldeveloper.source_hash }}
     {%- endif %}
     - archive_format: {{ sqldeveloper.archive_type }}
-    - options: {{ sqldeveloper.unpack_opts }}
     - user: root
     - group: root
     - require:
