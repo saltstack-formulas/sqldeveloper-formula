@@ -20,4 +20,8 @@ sqldeveloper-connections.xml:
     - source: salt://sqldeveloper/files/connections.xml
     - makedirs: True
     - user: {{ pillar['user'] }}
+{% if salt['grains.get']('os_family') == 'Suse' %}
+    - group: users
+{% else %}
     - group: {{ pillar['user'] }}
+{% endif %}
