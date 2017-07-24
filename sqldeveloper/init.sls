@@ -47,7 +47,6 @@ unpack-sqldeveloper-archive-to-realhome:
     - source_hash: {{ sqldeveloper.source_hash }}
     {%- endif %}
     - archive_format: {{ sqldeveloper.archive_type }}
-    - options: {{ sqldeveloper.unpack_opts }}
     - user: root
     - group: root
     - require:
@@ -66,7 +65,11 @@ sqldeveloper-desktop-entry:
     - source: salt://sqldeveloper/files/sqldeveloper.desktop
     - name: /home/{{ pillar['user'] }}/Desktop/sqldeveloper.desktop
     - user: {{ pillar['user'] }}
+{% if salt['grains.get']('os_family') == 'Suse' %}
+    - group: users
+{% else %}
     - group: {{ pillar['user'] }}
+{% endif %}
     - mode: 755
     - require:
       - unpack-sqldeveloper-archive-to-realhome

@@ -33,7 +33,7 @@
 {%- set archive_type           = g.get('archive_type', p.get('archive_type', default_archive_type )) %}
 {%- set sqldeveloper_symlink   = g.get('symlink', p.get('symlink', default_symlink )) %}
 {%- set sqldeveloper_real_home = g.get('real_home', p.get('real_home', default_real_home )) %}
-{%- set sql_priority           = g.get('alt_priority', p.get('alt_priority', default_alt_priority )) %}
+{%- set alt_priority           = g.get('alt_priority', p.get('alt_priority', default_alt_priority )) %}
 
 {%- set sqldeveloper_realcmd   = sqldeveloper_real_home + '/sqldeveloper/bin/sqldeveloper' %}
 
