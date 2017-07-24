@@ -7,7 +7,11 @@ sqldeveloper-product.conf:
     - name: /home/{{ pillar['user'] }}/.sqldeveloper/4.0.0/product.conf
     - makedirs: True
     - user: {{ pillar['user'] }}
+{% if salt['grains.get']('os_family') == 'Suse' %}
+    - group: users
+{% else %}
     - group: {{ pillar['user'] }}
+{% endif %}
 
 sqldeveloper-product.conf_append:
   file.append:
@@ -20,4 +24,8 @@ sqldeveloper-connections.xml:
     - source: salt://sqldeveloper/files/connections.xml
     - makedirs: True
     - user: {{ pillar['user'] }}
+{% if salt['grains.get']('os_family') == 'Suse' %}
+    - group: users
+{% else %}
     - group: {{ pillar['user'] }}
+{% endif %}

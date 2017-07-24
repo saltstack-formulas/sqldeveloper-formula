@@ -65,7 +65,11 @@ sqldeveloper-desktop-entry:
     - source: salt://sqldeveloper/files/sqldeveloper.desktop
     - name: /home/{{ pillar['user'] }}/Desktop/sqldeveloper.desktop
     - user: {{ pillar['user'] }}
+{% if salt['grains.get']('os_family') == 'Suse' %}
+    - group: users
+{% else %}
     - group: {{ pillar['user'] }}
+{% endif %}
     - mode: 755
     - require:
       - unpack-sqldeveloper-archive-to-realhome
