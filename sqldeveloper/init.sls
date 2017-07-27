@@ -9,7 +9,7 @@
 #runtime dependency
 sqldeveloper-libaio1:
   pkg.installed:
-    {%- if salt['grains.get']('os') == 'Ubuntu' %}
+    {%- if salt['grains.get']('os') == 'Ubuntu' or salt['grains.get']('os') == 'SUSE' %}
     - name: libaio1
     {%- else %}
     - name: libaio
@@ -29,15 +29,15 @@ sqldeveloper-install-dir:
 {{ archive_file }}:
   file.absent:
     - require:
-      - sqldeveloper-install-dir
+      - file: sqldeveloper-install-dir
     - require_in:
-      - download-sqldeveloper-archive
+      - cmd: download-sqldeveloper-archive
 
 download-sqldeveloper-archive:
   cmd.run:
     - name: curl {{ sqldeveloper.dl_opts }} -o '{{ archive_file }}' '{{ sqldeveloper.source_url }}'
     - require:
-      - sqldeveloper-install-dir
+      - file: sqldeveloper-install-dir
 
 unpack-sqldeveloper-archive-to-realhome:
   archive.extracted:
@@ -47,10 +47,8 @@ unpack-sqldeveloper-archive-to-realhome:
     - source_hash: {{ sqldeveloper.source_hash }}
     {%- endif %}
     - archive_format: {{ sqldeveloper.archive_type }}
-    - user: root
-    - group: root
     - require:
-      - download-sqldeveloper-archive
+      - cmd: download-sqldeveloper-archive
 
 update-sqldeveloper-home-symlink:
   file.symlink:
@@ -58,26 +56,26 @@ update-sqldeveloper-home-symlink:
     - target: {{ sqldeveloper.sqldeveloper_real_home }}
     - force: True
     - require:
-      - unpack-sqldeveloper-archive-to-realhome
+      - archive: unpack-sqldeveloper-archive-to-realhome
 
 sqldeveloper-desktop-entry:
   file.managed:
     - source: salt://sqldeveloper/files/sqldeveloper.desktop
     - name: /home/{{ pillar['user'] }}/Desktop/sqldeveloper.desktop
     - user: {{ pillar['user'] }}
-{% if salt['grains.get']('os_family') == 'Suse' %}
+{% if salt['grains.get']('os_family') == 'Suse' or salt['grains.get']('os') == 'SUSE' %}
     - group: users
 {% else %}
     - group: {{ pillar['user'] }}
 {% endif %}
     - mode: 755
     - require:
-      - unpack-sqldeveloper-archive-to-realhome
+      - archive: unpack-sqldeveloper-archive-to-realhome
 
 remove-sqldeveloper-archive:
   file.absent:
     - name: {{ archive_file }}
     - require:
-      - unpack-sqldeveloper-archive-to-realhome
+      - archive: unpack-sqldeveloper-archive-to-realhome
       
 {%- endif %}
