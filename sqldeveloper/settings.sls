@@ -8,12 +8,13 @@
 {%- set minor           = g.get('minor', p.get('minor', '2'))  %}
 {%- set version         = g.get('version', p.get('version', release + '.' + minor + '.0.17.089.1709' )) %}
 
-## ######## YOU MUST CHANGE TO LOCAL MIRROR DUE TO LICENSE ACCEPTANCE/LOGIN REQ. ####### #}
+{########## YOU MUST CHANGE THIS URL TO YOUR LOCAL MIRROR ####### #}
 {%- set mirror  = 'http://download.oracle.com/otn/java/sqldeveloper/' %}
 
 {%- set default_archive_type = 'zip' %}
 {%- set default_prefix       = '/usr/share/oracle/' + oracle_release + '/' %}
 {%- set default_source_url   = mirror + '/sqldeveloper-' + version + '-no-jre.' + default_archive_type %}
+  ###### Hash for version 4.2 linux binary ####
 {%- set default_source_hash  = 'md5=158f54967e563a013b9656918e628427' %}
 
 {%- set source_url           = g.get('source_url', p.get('source_url', default_source_url )) %}
