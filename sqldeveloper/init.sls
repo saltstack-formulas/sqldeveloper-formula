@@ -47,6 +47,9 @@ unpack-sqldeveloper-archive-to-realhome:
     - source_hash: {{ sqldeveloper.source_hash }}
     {%- endif %}
     - archive_format: {{ sqldeveloper.archive_type }}
+  {% if grains['saltversioninfo'] < [2016, 11, 0] %}
+    - if_missing: {{ sqldeveloper.sqldeveloper_realcmd }}
+  {% endif %}
     - require:
       - cmd: download-sqldeveloper-archive
 
