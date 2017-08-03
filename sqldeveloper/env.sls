@@ -25,7 +25,7 @@ sqldeveloperhome-alt-set:
   - name: sqldeveloper-home
   - path: {{ sqldeveloper.sqldeveloper_real_home }}
   - require:
-    - sqldeveloperhome-alt-install
+    - alternatives: sqldeveloperhome-alt-install
 
 # Add sqldeveloper to alternatives system
 sqldeveloper-alt-install:
@@ -35,12 +35,12 @@ sqldeveloper-alt-install:
     - path: {{ sqldeveloper.sqldeveloper_realcmd }}
     - priority: {{ sqldeveloper.alt_priority }}
     - require:
-      - sqldeveloperhome-alt-set
+      - alternatives: sqldeveloperhome-alt-set
 
 sqldeveloper-alt-set:
   alternatives.set:
   - name: sqldeveloper
   - path: {{ sqldeveloper.sqldeveloper_realcmd }}
   - require:
-    - sqldeveloper-alt-install
+    - alternatives: sqldeveloper-alt-install
 
