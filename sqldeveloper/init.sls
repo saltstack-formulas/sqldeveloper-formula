@@ -38,17 +38,31 @@ download-sqldeveloper-archive:
     - require:
       - file: sqldeveloper-remove-prev-archive
 
-unpack-sqldeveloper-archive-to-realhome:
+  {% if grains['saltversioninfo'] <= [2016, 11, 6] and sqldeveloper.source_hash %}
+    # See: https://github.com/saltstack/salt/pull/41914
+sqldeveloper-check-archive-hash:
+  module.run:
+    - name: file.check_hash
+    - path: {{ archive_file }}
+    - file_hash: {{ sqldeveloper.source_hash }}
+    - onchanges:
+      - cmd: sqldeveloper-download-archive
+    - require_in:
+      - archive: sqldeveloper-unpack-archive
+  {%- endif %}
+
+sqldeveloper-unpack-archive:
   archive.extracted:
     - name: {{ sqldeveloper.prefix }}
     - source: file://{{ archive_file }}
     - archive_format: {{ sqldeveloper.archive_type }}
-  {%- if sqldeveloper.source_hash %}
+  {% if grains['saltversioninfo'] > [2016, 11, 6] and sqldeveloper.source_hash %}
     - source_hash: {{ sqldeveloper.source_hash }}
   {%- endif %}
+  {% if grains['saltversioninfo'] < [2016, 11, 0] %}
+    - tar_options: {{ sqldeveloper.unpack_opts }}
     - if_missing: {{ sqldeveloper.sqldeveloper_realcmd }}
-    - require:
-      - cmd: download-sqldeveloper-archive
+  {% endif %}
     - onchanges:
       - cmd: download-sqldeveloper-archive
 
@@ -58,9 +72,9 @@ update-sqldeveloper-home-symlink:
     - target: {{ sqldeveloper.sqldeveloper_real_home }}
     - force: True
     - require:
-      - archive: unpack-sqldeveloper-archive-to-realhome
+      - archive: sqldeveloper-unpack-archive
     - onchanges:
-      - archive: unpack-sqldeveloper-archive-to-realhome
+      - archive: sqldeveloper-unpack-archive
 
 sqldeveloper-desktop-entry:
   file.managed:
@@ -74,14 +88,14 @@ sqldeveloper-desktop-entry:
   {% endif %}
     - mode: 755
     - require:
-      - archive: unpack-sqldeveloper-archive-to-realhome
+      - archive: sqldeveloper-unpack-archive
     - onchanges:
-      - archive: unpack-sqldeveloper-archive-to-realhome
+      - archive: sqldeveloper-unpack-archive
 
 remove-sqldeveloper-archive:
   file.absent:
     - name: {{ archive_file }}
     - require:
-      - archive: unpack-sqldeveloper-archive-to-realhome
+      - archive: sqldeveloper-unpack-archive
       
 {%- endif %}
