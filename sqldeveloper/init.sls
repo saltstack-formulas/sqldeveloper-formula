@@ -51,6 +51,8 @@ unpack-sqldeveloper-archive-to-realhome:
   {% endif %}
     - require:
       - cmd: download-sqldeveloper-archive
+    - onchanges:
+      - cmd: download-sqldeveloper-archive
 
 update-sqldeveloper-home-symlink:
   file.symlink:
@@ -58,6 +60,8 @@ update-sqldeveloper-home-symlink:
     - target: {{ sqldeveloper.sqldeveloper_real_home }}
     - force: True
     - require:
+      - archive: unpack-sqldeveloper-archive-to-realhome
+    - onchanges:
       - archive: unpack-sqldeveloper-archive-to-realhome
 
 sqldeveloper-desktop-entry:
@@ -72,6 +76,8 @@ sqldeveloper-desktop-entry:
   {% endif %}
     - mode: 755
     - require:
+      - archive: unpack-sqldeveloper-archive-to-realhome
+    - onchanges:
       - archive: unpack-sqldeveloper-archive-to-realhome
 
 remove-sqldeveloper-archive:
