@@ -32,7 +32,7 @@ sqldeveloper-remove-prev-archive:
     - require:
       - file: sqldeveloper-install-dir
 
-download-sqldeveloper-archive:
+sqldeveloper-download-archive:
   cmd.run:
     - name: curl {{ sqldeveloper.dl_opts }} -o '{{ archive_file }}' '{{ sqldeveloper.source_url }}'
     - require:
@@ -64,7 +64,7 @@ sqldeveloper-unpack-archive:
     - if_missing: {{ sqldeveloper.sqldeveloper_realcmd }}
   {% endif %}
     - onchanges:
-      - cmd: download-sqldeveloper-archive
+      - cmd: sqldeveloper-download-archive
 
 update-sqldeveloper-home-symlink:
   file.symlink:
