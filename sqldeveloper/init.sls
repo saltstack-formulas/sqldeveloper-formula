@@ -60,7 +60,6 @@ sqldeveloper-unpack-archive:
     - source_hash: {{ sqldeveloper.source_hash }}
   {%- endif %}
   {% if grains['saltversioninfo'] < [2016, 11, 0] %}
-    - tar_options: {{ sqldeveloper.unpack_opts }}
     - if_missing: {{ sqldeveloper.sqldeveloper_realcmd }}
   {% endif %}
     - onchanges:
