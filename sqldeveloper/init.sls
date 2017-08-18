@@ -60,7 +60,7 @@ sqldeveloper-unpack-archive:
     - name: {{ sqldeveloper.prefix }}
     - source: file://{{ archive_file }}
     - archive_format: {{ sqldeveloper.archive_type }}
-  {% if grains['saltversioninfo'] > [2016, 11, 6] and sqldeveloper.source_hash %}
+  {% if sqldeveloper.source_hash and grains['saltversioninfo'] > [2016, 11, 6] %}
     - source_hash: {{ sqldeveloper.source_hash }}
   {%- endif %}
   {% if grains['saltversioninfo'] < [2016, 11, 0] %}
