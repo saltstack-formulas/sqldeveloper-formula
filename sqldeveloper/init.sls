@@ -42,7 +42,7 @@ sqldeveloper-download-archive:
     - require_in:
       - archive: sqldeveloper-unpack-archive
 
-  {% if grains['saltversioninfo'] <= [2016, 11, 6] and sqldeveloper.source_hash %}
+  {%- if grains['saltversioninfo'] <= [2016, 11, 6] and sqldeveloper.source_hash %}
     # See: https://github.com/saltstack/salt/pull/41914
 sqldeveloper-check-archive-hash:
   module.run:
@@ -60,7 +60,7 @@ sqldeveloper-unpack-archive:
     - name: {{ sqldeveloper.prefix }}
     - source: file://{{ archive_file }}
     - archive_format: {{ sqldeveloper.archive_type }}
-  {% if sqldeveloper.source_hash and grains['saltversioninfo'] > [2016, 11, 6] %}
+  {%- if sqldeveloper.source_hash and grains['saltversioninfo'] > [2016, 11, 6] %}
     - source_hash: {{ sqldeveloper.source_hash }}
   {%- endif %}
   {% if grains['saltversioninfo'] < [2016, 11, 0] %}
