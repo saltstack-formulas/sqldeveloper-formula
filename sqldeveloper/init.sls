@@ -73,7 +73,7 @@ update-sqldeveloper-home-symlink:
     - name: {{ sqldeveloper.orahome }}/sqldeveloper
     - target: {{ sqldeveloper.sqldeveloper_real_home }}
     - force: True
-    - require:
+    - onchanges:
       - archive: sqldeveloper-unpack-archive
 
 sqldeveloper-desktop-entry:
@@ -87,13 +87,13 @@ sqldeveloper-desktop-entry:
     - group: {{ pillar['user'] }}
    {% endif %}
     - mode: 755
-    - require:
+    - onchanges:
       - file: update-sqldeveloper-home-symlink
 
 remove-sqldeveloper-archive:
   file.absent:
     - name: {{ archive_file }}
-    - require:
+    - onchanges:
       - file: update-sqldeveloper-home-symlink
       
 {%- endif %}
