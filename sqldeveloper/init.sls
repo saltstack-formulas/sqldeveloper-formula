@@ -31,12 +31,16 @@ sqldeveloper-remove-prev-archive:
     - name: {{ archive_file }}
     - require:
       - file: sqldeveloper-install-dir
+    - require_in:
+      - cmd: sqldeveloper-download-archive
 
 sqldeveloper-download-archive:
   cmd.run:
     - name: curl {{ sqldeveloper.dl_opts }} -o '{{ archive_file }}' '{{ sqldeveloper.source_url }}'
     - require:
       - file: sqldeveloper-remove-prev-archive
+    - require_in:
+      - archive: sqldeveloper-unpack-archive
 
   {% if grains['saltversioninfo'] <= [2016, 11, 6] and sqldeveloper.source_hash %}
     # See: https://github.com/saltstack/salt/pull/41914
@@ -60,10 +64,9 @@ sqldeveloper-unpack-archive:
     - source_hash: {{ sqldeveloper.source_hash }}
   {%- endif %}
   {% if grains['saltversioninfo'] < [2016, 11, 0] %}
+    - tar_options: {{ sqldeveloper.unpack_opts }}
     - if_missing: {{ sqldeveloper.sqldeveloper_realcmd }}
   {% endif %}
-    - onchanges:
-      - cmd: sqldeveloper-download-archive
 
 update-sqldeveloper-home-symlink:
   file.symlink:
@@ -72,29 +75,25 @@ update-sqldeveloper-home-symlink:
     - force: True
     - require:
       - archive: sqldeveloper-unpack-archive
-    - onchanges:
-      - archive: sqldeveloper-unpack-archive
 
 sqldeveloper-desktop-entry:
   file.managed:
     - source: salt://sqldeveloper/files/sqldeveloper.desktop
     - name: /home/{{ pillar['user'] }}/Desktop/sqldeveloper.desktop
     - user: {{ pillar['user'] }}
-  {% if salt['grains.get']('os_family') == 'Suse' or salt['grains.get']('os') == 'SUSE' %}
+   {% if salt['grains.get']('os_family') == 'Suse' or salt['grains.get']('os') == 'SUSE' %}
     - group: users
-  {% else %}
+   {% else %}
     - group: {{ pillar['user'] }}
-  {% endif %}
+   {% endif %}
     - mode: 755
     - require:
-      - archive: sqldeveloper-unpack-archive
-    - onchanges:
-      - archive: sqldeveloper-unpack-archive
+      - file: update-sqldeveloper-home-symlink
 
 remove-sqldeveloper-archive:
   file.absent:
     - name: {{ archive_file }}
     - require:
-      - archive: sqldeveloper-unpack-archive
+      - file: update-sqldeveloper-home-symlink
       
 {%- endif %}
