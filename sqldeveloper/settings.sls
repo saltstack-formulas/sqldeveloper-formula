@@ -25,12 +25,14 @@
 {%- endif %}
 
 {%- set default_dl_opts      = ' -s ' %}
+{%- set default_unpack_opts  = 'o' %}
 {%- set default_symlink      = '/usr/bin/sqldeveloper' %}
 {%- set default_real_home    = default_prefix + 'sqldeveloper' %}
 {%- set default_alt_priority = '30' %}
 
 {%- set prefix                 = g.get('prefix', p.get('prefix', default_prefix )) %}
 {%- set dl_opts                = g.get('dl_opts', p.get('dl_opts', default_dl_opts )) %}
+{%- set unpack_opts            = g.get('unpack_opts', p.get('unpack_opts', default_unpack_opts )) %}
 {%- set archive_type           = g.get('archive_type', p.get('archive_type', default_archive_type )) %}
 {%- set sqldeveloper_symlink   = g.get('symlink', p.get('symlink', default_symlink )) %}
 {%- set sqldeveloper_real_home = g.get('real_home', p.get('real_home', default_real_home )) %}
@@ -46,6 +48,7 @@
                                 'source_hash'           : source_hash,
                                 'orahome'               : orahome,
                                 'dl_opts'               : dl_opts,
+                                'unpack_opts'           : unpack_opts,
                                 'archive_type'          : archive_type,
                                 'prefix'                : prefix,
                                 'sqldeveloper_real_home': sqldeveloper_real_home,
