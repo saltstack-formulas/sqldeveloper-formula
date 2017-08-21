@@ -11,16 +11,32 @@ sqldeveloper-config:
     - context:
       orahome: {{ sqldeveloper.orahome }}/sqldeveloper
 
+{% if sqldeveloper.connections_url != 'undefined' %}
+sqldeveloper-connections-xml:
+  cmd.run:
+  - name: curl -o /home/{{ pillar['user'] }}/.sqldeveloper/connections.xml '{{ sqldeveloper.connections_url }}'
+  - if_missing: /home/{{ pillar['user'] }}/.sqldeveloper/connections.xml
+{% endif %}
+
 sqldeveloper-product.conf:
   file.managed:
     - name: /home/{{ pillar['user'] }}/.sqldeveloper/{{ version }}.{{ major }}.{{ minor }}/product.conf
     - makedirs: True
+
+sqldeveloper-dir-permissions:
+  file.recurse:
+    - name: /home/{{ pillar['user'] }}/.sqldeveloper
     - user: {{ pillar['user'] }}
-{% if salt['grains.get']('os_family') == 'Suse' or salt['grains.get']('os') == 'SUSE' %}
+  {% if salt['grains.get']('os_family') == 'Suse' or salt['grains.get']('os') == 'SUSE' %}
     - group: users
-{% else %}
+  {% else %}
     - group: {{ pillar['user'] }}
-{% endif %}
+  {% endif %}
+    - onchanges:
+      - sqldeveloper-connections-xml
+      - sqldeveloper-product.conf
+    - require:
+      - sqldeveloper-product.conf
 
 sqldeveloper-product.conf_append:
   file.append:
