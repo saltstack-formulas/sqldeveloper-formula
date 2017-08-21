@@ -2,7 +2,8 @@ orahome: /opt/oracle/12_2
 oracle_release: 12_2
 sqldeveloper:
   release: 4
-  minor: 2
+  major: 2
+  minor: 0
   version: 4.2.0.17.089.1709
   source_url: http://download.oracle.com/otn/java/sqldeveloper/sqldeveloper-4.2.0.17.089.1709-no-jre.zip
   source_hash: http://download.oracle.com/otn/java/sqldeveloper/sqldeveloper-4.2.0.17.089.1709-no-jre.zip.sha256
