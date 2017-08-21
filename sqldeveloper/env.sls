@@ -11,6 +11,26 @@ sqldeveloper-config:
     - context:
       orahome: {{ sqldeveloper.orahome }}/sqldeveloper
 
+sqldeveloper-product.conf:
+  file.managed:
+    - name: /home/{{ pillar['user'] }}/.sqldeveloper/{{ version }}.{{ major }}.{{ minor }}/product.conf
+    - makedirs: True
+    - user: {{ pillar['user'] }}
+{% if salt['grains.get']('os_family') == 'Suse' or salt['grains.get']('os') == 'SUSE' %}
+    - group: users
+{% else %}
+    - group: {{ pillar['user'] }}
+{% endif %}
+
+sqldeveloper-product.conf_append:
+  file.append:
+    - name: /home/{{ pillar['user'] }}/.sqldeveloper/{{ version }}.{{ major }}.{{ minor }}/product.conf
+    - text: 'SetJavaHome /usr/lib/java'
+    - require:
+      - sqldeveloper-product.conf
+    - onchanges:
+      - sqldeveloper-product.conf
+
 # Add sqldeveloper home to alternatives system
 sqldeveloperhome-alt-install:
   alternatives.install:
