@@ -12,6 +12,7 @@
 {########## YOU MUST CHANGE THIS URL TO YOUR LOCAL MIRROR ####### #}
 {%- set mirror  = 'http://download.oracle.com/otn/java/sqldeveloper/' %}
 
+{%- set default_tnsnames_url = 'undefined' %}
 {%- set default_archive_type = 'zip' %}
 {%- set default_prefix       = '/usr/share/oracle/' + oracle_release + '/' %}
 {%- set default_source_url   = mirror + '/sqldeveloper-' + version + '-no-jre.' + default_archive_type %}
@@ -31,6 +32,7 @@
 {%- set default_real_home    = default_prefix + 'sqldeveloper' %}
 {%- set default_alt_priority = '30' %}
 
+{%- set tnsnames_url           = g.get('tnsnames_url', p.get('tnsnames_url', default_tnsnames_url )) %}
 {%- set prefix                 = g.get('prefix', p.get('prefix', default_prefix )) %}
 {%- set dl_opts                = g.get('dl_opts', p.get('dl_opts', default_dl_opts )) %}
 {%- set unpack_opts            = g.get('unpack_opts', p.get('unpack_opts', default_unpack_opts )) %}
@@ -52,6 +54,7 @@
                                 'dl_opts'               : dl_opts,
                                 'unpack_opts'           : unpack_opts,
                                 'archive_type'          : archive_type,
+                                'tnsnames_url'          : tnsnames_url,
                                 'prefix'                : prefix,
                                 'sqldeveloper_real_home': sqldeveloper_real_home,
                                 'sqldeveloper_symlink'  : sqldeveloper_symlink,
