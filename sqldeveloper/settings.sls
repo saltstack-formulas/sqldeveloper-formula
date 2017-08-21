@@ -4,9 +4,10 @@
 {%- set oracle_release = g.get('oracle_release', p.get('oracle_release', '12_2')) %}
 {%- set orahome = salt['grains.get']('orahome', salt['pillar.get']('orahome', '/opt/oracle/' + oracle_release + '/' )) %}
 
-{%- set release         = g.get('release', p.get('release', '4')) %}
-{%- set minor           = g.get('minor', p.get('minor', '2'))  %}
-{%- set version         = g.get('version', p.get('version', release + '.' + minor + '.0.17.089.1709' )) %}
+{%- set release = g.get('release', p.get('release', '4')) %}
+{%- set major   = g.get('major', p.get('major', '2'))  %}
+{%- set minor   = g.get('major', p.get('major', '0'))  %}
+{%- set version = g.get('version', p.get('version', release + '.' + major + '.' + minor '.17.089.1709' )) %}
 
 {########## YOU MUST CHANGE THIS URL TO YOUR LOCAL MIRROR ####### #}
 {%- set mirror  = 'http://download.oracle.com/otn/java/sqldeveloper/' %}
@@ -14,7 +15,7 @@
 {%- set default_archive_type = 'zip' %}
 {%- set default_prefix       = '/usr/share/oracle/' + oracle_release + '/' %}
 {%- set default_source_url   = mirror + '/sqldeveloper-' + version + '-no-jre.' + default_archive_type %}
-  ###### Hash for version 4.2 linux binary ####
+  ###### Hash for version 4.2.0.17 linux binary ####
 {%- set default_source_hash  = 'md5=158f54967e563a013b9656918e628427' %}
 
 {%- set source_url           = g.get('source_url', p.get('source_url', default_source_url )) %}
@@ -42,6 +43,7 @@
 
 {%- set sqldeveloper = {} %}
 {%- do sqldeveloper.update( {   'release'               : release,
+                                'major'                 : major,
                                 'minor'                 : minor,
                                 'version'               : version,
                                 'source_url'            : source_url,
