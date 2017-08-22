@@ -1,6 +1,6 @@
 {%- from 'sqldeveloper/settings.sls' import sqldeveloper with context %}
 
-{#- require a source_url - there may be no default download location for sqldeveloper #}
+{%- require a source_url - there may be no default download location for sqldeveloper %}
 
 {%- if sqldeveloper.source_url is defined %}
 
