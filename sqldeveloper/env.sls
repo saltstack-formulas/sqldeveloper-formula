@@ -13,19 +13,28 @@ sqldeveloper-config:
     - context:
       orahome: {{ sqldeveloper.orahome }}/sqldeveloper
 
+sqldeveloper-connections-dir:
+  file.directory:
+    - name: /home/{{ pillar['user'] }}/.sqldeveloper/
+    - backupname: /home/{{ pillar['user'] }}/.sqldeveloper_bak/
+
 {% if sqldeveloper.connections_url != 'undefined' %}
 sqldeveloper-connections-xml:
   cmd.run:
   - name: curl -o /home/{{ pillar['user'] }}/.sqldeveloper/connections.xml '{{ sqldeveloper.connections_url }}'
   - if_missing: /home/{{ pillar['user'] }}/.sqldeveloper/connections.xml
+  - require:
+    - file: sqldeveloper-connections-dir
 {% endif %}
 
 sqldeveloper-product.conf:
   file.managed:
     - name: /home/{{ pillar['user'] }}/.sqldeveloper/{{ release }}/product.conf
     - makedirs: True
+  - require:
+    - file: sqldeveloper-connections-dir
 
-sqldeveloper-dir-permissions:
+sqldeveloper-connections-permissions:
   file.recurse:
     - name: /home/{{ pillar['user'] }}/.sqldeveloper
     - user: {{ pillar['user'] }}
@@ -35,17 +44,16 @@ sqldeveloper-dir-permissions:
     - group: {{ pillar['user'] }}
   {% endif %}
     - onchanges:
+      - sqldeveloper-connections-dir
       - sqldeveloper-connections-xml
       - sqldeveloper-product.conf
-    - require:
-      - sqldeveloper-product.conf
+  - require:
+    - file: sqldeveloper-connections-dir
 
 sqldeveloper-product.conf_append:
   file.append:
     - name: /home/{{ pillar['user'] }}/.sqldeveloper/{{ release }}/product.conf
     - text: 'SetJavaHome /usr/lib/java'
-    - require:
-      - sqldeveloper-product.conf
     - onchanges:
       - sqldeveloper-product.conf
 
