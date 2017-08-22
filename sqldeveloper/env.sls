@@ -1,6 +1,6 @@
 {%- from 'sqldeveloper/settings.sls' import sqldeveloper with context %}
 
-{%- set release = {{ sqldeveloper.version }} + '.' + {{ sqldeveloper.major }} + '.' + {{ sqldeveloper.minor }}
+{%- set release = {{ sqldeveloper.version }} + '.' + {{ sqldeveloper.major }} + '.' + {{ sqldeveloper.minor }} %}
 
 sqldeveloper-config:
   file.managed:
