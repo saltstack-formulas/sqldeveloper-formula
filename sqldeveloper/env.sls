@@ -16,23 +16,23 @@ sqldeveloper-config:
 sqldeveloper-connections-dir:
   file.directory:
     - name: /home/{{ pillar['user'] }}/.sqldeveloper/
-    - backupname: /home/{{ pillar['user'] }}/.sqldeveloper_bak/
+    - backupname: /home/{{ pillar['user'] }}/.sqldeveloper_bak
 
 {% if sqldeveloper.connections_url != 'undefined' %}
 sqldeveloper-connections-xml:
   cmd.run:
-  - name: curl -o /home/{{ pillar['user'] }}/.sqldeveloper/connections.xml '{{ sqldeveloper.connections_url }}'
-  - if_missing: /home/{{ pillar['user'] }}/.sqldeveloper/connections.xml
-  - require:
-    - file: sqldeveloper-connections-dir
+    - name: curl -o /home/{{ pillar['user'] }}/.sqldeveloper/connections.xml '{{ sqldeveloper.connections_url }}'
+    - if_missing: /home/{{ pillar['user'] }}/.sqldeveloper/connections.xml
+    - require:
+      - file: sqldeveloper-connections-dir
 {% endif %}
 
 sqldeveloper-product.conf:
   file.managed:
     - name: /home/{{ pillar['user'] }}/.sqldeveloper/{{ release }}/product.conf
     - makedirs: True
-  - require:
-    - file: sqldeveloper-connections-dir
+    - require:
+      - file: sqldeveloper-connections-dir
 
 sqldeveloper-connections-permissions:
   file.recurse:
@@ -47,8 +47,8 @@ sqldeveloper-connections-permissions:
       - sqldeveloper-connections-dir
       - sqldeveloper-connections-xml
       - sqldeveloper-product.conf
-  - require:
-    - file: sqldeveloper-connections-dir
+    - require:
+      - file: sqldeveloper-connections-dir
 
 sqldeveloper-product.conf_append:
   file.append:
