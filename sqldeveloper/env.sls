@@ -1,5 +1,7 @@
 {%- from 'sqldeveloper/settings.sls' import sqldeveloper with context %}
 
+{%- set release = {{ sqldeveloper.version }} + '.' + {{ sqldeveloper.major }} + '.' + {{ sqldeveloper.minor }}
+
 sqldeveloper-config:
   file.managed:
     - name: /etc/profile.d/sqldeveloper.sh
@@ -20,7 +22,7 @@ sqldeveloper-connections-xml:
 
 sqldeveloper-product.conf:
   file.managed:
-    - name: /home/{{ pillar['user'] }}/.sqldeveloper/{{ version }}.{{ major }}.{{ minor }}/product.conf
+    - name: /home/{{ pillar['user'] }}/.sqldeveloper/{{ release }}/product.conf
     - makedirs: True
 
 sqldeveloper-dir-permissions:
@@ -40,7 +42,7 @@ sqldeveloper-dir-permissions:
 
 sqldeveloper-product.conf_append:
   file.append:
-    - name: /home/{{ pillar['user'] }}/.sqldeveloper/{{ version }}.{{ major }}.{{ minor }}/product.conf
+    - name: /home/{{ pillar['user'] }}/.sqldeveloper/{{ release }}/product.conf
     - text: 'SetJavaHome /usr/lib/java'
     - require:
       - sqldeveloper-product.conf
