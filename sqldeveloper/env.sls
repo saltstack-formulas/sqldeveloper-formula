@@ -16,7 +16,7 @@ sqldeveloper-config:
 sqldeveloper-connections-dir:
   file.directory:
     - name: /home/{{ pillar['user'] }}/.sqldeveloper/
-    - backupname: /home/{{ pillar['user'] }}/.sqldeveloper_bak
+    - backupname: /home/{{ pillar['user'] }}/.bak
 
 {% if sqldeveloper.connections_url != 'undefined' %}
 sqldeveloper-connections-xml:
@@ -62,14 +62,14 @@ sqldeveloperhome-alt-install:
   alternatives.install:
     - name: sqldeveloper-home
     - link: {{ sqldeveloper.orahome }}/sqldeveloper
-    - path: {{ sqldeveloper.sqldeveloper_real_home }}
+    - path: {{ sqldeveloper.real_home }}
     - priority: {{ sqldeveloper.alt_priority }}
 
 # Set sqldeveloper alternatives
 sqldeveloperhome-alt-set:
   alternatives.set:
     - name: sqldeveloper-home
-    - path: {{ sqldeveloper.sqldeveloper_real_home }}
+    - path: {{ sqldeveloper.real_home }}
     - onchanges:
       - alternatives: sqldeveloperhome-alt-install
 
@@ -77,8 +77,8 @@ sqldeveloperhome-alt-set:
 sqldeveloper-alt-install:
   alternatives.install:
     - name: sqldeveloper
-    - link: {{ sqldeveloper.sqldeveloper_symlink }}
-    - path: {{ sqldeveloper.sqldeveloper_realcmd }}
+    - link: {{ sqldeveloper.symlink }}
+    - path: {{ sqldeveloper.realcmd }}
     - priority: {{ sqldeveloper.alt_priority }}
     - onchanges:
       - alternatives: sqldeveloperhome-alt-set
@@ -86,7 +86,7 @@ sqldeveloper-alt-install:
 sqldeveloper-alt-set:
   alternatives.set:
     - name: sqldeveloper
-    - path: {{ sqldeveloper.sqldeveloper_realcmd }}
+    - path: {{ sqldeveloper.realcmd }}
     - onchanges:
       - alternatives: sqldeveloper-alt-install
 

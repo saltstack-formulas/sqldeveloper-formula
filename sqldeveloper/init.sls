@@ -65,13 +65,13 @@ sqldeveloper-unpack-archive:
   {%- endif %}
   {% if grains['saltversioninfo'] < [2016, 11, 0] %}
     - tar_options: {{ sqldeveloper.unpack_opts }}
-    - if_missing: {{ sqldeveloper.sqldeveloper_realcmd }}
+    - if_missing: {{ sqldeveloper.realcmd }}
   {% endif %}
 
 update-sqldeveloper-home-symlink:
   file.symlink:
     - name: {{ sqldeveloper.orahome }}/sqldeveloper
-    - target: {{ sqldeveloper.sqldeveloper_real_home }}
+    - target: {{ sqldeveloper.real_home }}
     - force: True
     - onchanges:
       - archive: sqldeveloper-unpack-archive
