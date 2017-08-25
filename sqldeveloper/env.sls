@@ -39,12 +39,6 @@ sqldeveloper-get-preferences-importfile-from-url:
   cmd.run:
     - name: curl -s -o /home/{{ sqldeveloper.user }}/.sqldeveloper/my-preferences.xml '{{ sqldeveloper.prefs_url }}'
     - if_missing: /home/{{ sqldeveloper.user }}/my-preferences.xml
-   {% if salt['grains.get']('os_family') == 'Suse' or salt['grains.get']('os') == 'SUSE' %}
-    - group: users
-   {% else %}
-    - group: {{ sqldeveloper.user }}
-   {% endif %}
-    - if_missing: /home/{{ sqldeveloper.user }}/my-preferences.xml
 
   {% elif sqldeveloper.prefs_path != 'undefined' %}
 
