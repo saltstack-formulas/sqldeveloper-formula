@@ -76,19 +76,21 @@ update-sqldeveloper-home-symlink:
     - onchanges:
       - archive: sqldeveloper-unpack-archive
 
+  {% if sqldeveloper.user != 'undefined' %}
 sqldeveloper-desktop-entry:
   file.managed:
     - source: salt://sqldeveloper/files/sqldeveloper.desktop
-    - name: /home/{{ pillar['user'] }}/Desktop/sqldeveloper.desktop
-    - user: {{ pillar['user'] }}
+    - name: /home/{{ sqldeveloper.user }}/Desktop/sqldeveloper.desktop
+    - user: {{ sqldeveloper.user }}
    {% if salt['grains.get']('os_family') == 'Suse' or salt['grains.get']('os') == 'SUSE' %}
     - group: users
    {% else %}
-    - group: {{ pillar['user'] }}
+    - group: {{ sqldeveloper.user }}
    {% endif %}
     - mode: 755
     - onchanges:
       - file: update-sqldeveloper-home-symlink
+  {% endif %}
 
 remove-sqldeveloper-archive:
   file.absent:

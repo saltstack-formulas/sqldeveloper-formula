@@ -13,35 +13,36 @@ sqldeveloper-config:
     - context:
       orahome: {{ sqldeveloper.orahome }}/sqldeveloper
 
+{% if sqldeveloper.user != 'undefined' %}
 sqldeveloper-connections-dir:
   file.directory:
-    - name: /home/{{ pillar['user'] }}/.sqldeveloper/
-    - backupname: /home/{{ pillar['user'] }}/.bak
+    - name: /home/{{ sqldeveloper.user }}/.sqldeveloper/
+    - backupname: /home/{{ sqldeveloper.user }}/.bak
 
-{% if sqldeveloper.connections_url != 'undefined' %}
+  {% if sqldeveloper.connections_url != 'undefined' %}
 sqldeveloper-connections-xml:
   cmd.run:
-    - name: curl -o /home/{{ pillar['user'] }}/.sqldeveloper/connections.xml '{{ sqldeveloper.connections_url }}'
-    - if_missing: /home/{{ pillar['user'] }}/.sqldeveloper/connections.xml
+    - name: curl -o /home/{{ sqldeveloper.user }}/.sqldeveloper/connections.xml '{{ sqldeveloper.connections_url }}'
+    - if_missing: /home/{{ sqldeveloper.user }}/.sqldeveloper/connections.xml
     - require:
       - file: sqldeveloper-connections-dir
-{% endif %}
+  {% endif %}
 
 sqldeveloper-product.conf:
   file.managed:
-    - name: /home/{{ pillar['user'] }}/.sqldeveloper/{{ release }}/product.conf
+    - name: /home/{{ sqldeveloper.user }}/.sqldeveloper/{{ release }}/product.conf
     - makedirs: True
     - require:
       - file: sqldeveloper-connections-dir
 
 sqldeveloper-connections-permissions:
   file.recurse:
-    - name: /home/{{ pillar['user'] }}/.sqldeveloper
-    - user: {{ pillar['user'] }}
+    - name: /home/{{ sqldeveloper.user }}/.sqldeveloper
+    - user: {{ sqldeveloper.user }}
   {% if salt['grains.get']('os_family') == 'Suse' or salt['grains.get']('os') == 'SUSE' %}
     - group: users
   {% else %}
-    - group: {{ pillar['user'] }}
+    - group: {{ sqldeveloper.user }}
   {% endif %}
     - onchanges:
       - sqldeveloper-connections-dir
@@ -52,10 +53,11 @@ sqldeveloper-connections-permissions:
 
 sqldeveloper-product.conf_append:
   file.append:
-    - name: /home/{{ pillar['user'] }}/.sqldeveloper/{{ release }}/product.conf
+    - name: /home/{{ sqldeveloper.user }}/.sqldeveloper/{{ release }}/product.conf
     - text: 'SetJavaHome /usr/lib/java'
     - onchanges:
       - sqldeveloper-product.conf
+{% endif %}
 
 # Add sqldeveloper home to alternatives system
 sqldeveloperhome-alt-install:
