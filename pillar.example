@@ -15,6 +15,8 @@ sqldeveloper:
   unpack_opts: o
   archive_type: zip
   connections_url: undefined
+  settings_url: undefined
+  settings_path: undefined
   symlink: /usr/bin/sqldeveloper
   prefix: /usr/share/oracle/12_2
   real_home: /usr/share/oracle/12_2/sqldeveloper

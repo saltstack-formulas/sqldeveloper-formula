@@ -36,7 +36,7 @@ sqldeveloper-get-settings-importfile-from-url:
   {% elif sqldeveloper.settings_path != 'undefined' %}
 sqldeveloper-get-settings-importfile-from-path:
   file.managed:
-    - name: /home/{{ sqldeveloper.user }}/my-sqldeveloper-settings.jar
+    - name: /home/{{ sqldeveloper.user }}/my-connections-passwords.xml
     - source: {{ sqldeveloper.settings_path }}
     - mode: 644
     - user: {{ sqldeveloper.user }}
@@ -45,6 +45,7 @@ sqldeveloper-get-settings-importfile-from-path:
       {% else %}
     - group: {{ sqldeveloper.user }}
       {% endif %}
+    - if_missing: /home/{{ sqldeveloper.user }}/my-connections-passwords.xml
   {% endif %}
 {% endif %}
 
