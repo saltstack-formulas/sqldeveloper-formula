@@ -13,6 +13,8 @@
 {%- set mirror  = 'http://download.oracle.com/otn/java/sqldeveloper/' %}
 
 {%- set default_user            = 'undefined' %}
+{%- set default_prefs_url       = 'undefined' %}
+{%- set default_prefs_path      = 'undefined' %}
 {%- set default_connections_url = 'undefined' %}
 {%- set default_archive_type    = 'zip' %}
 {%- set default_prefix          = '/usr/share/oracle/' ~ orarelease ~ '/' %}
@@ -33,6 +35,8 @@
 {%- set default_real_home    = default_prefix ~ 'sqldeveloper' %}
 {%- set default_alt_priority = '30' %}
 
+{%- set prefs_url            = g.get('prefs_url', p.get('prefs_url', default_prefs_url )) %}
+{%- set prefs_path           = g.get('prefs_path', p.get('prefs_path', default_prefs_path )) %}
 {%- set user                 = g.get('default_user', salt['pillar.get']('default_user', p.get('default_user', default_user)) %}
 {%- set connections_url      = g.get('connections_url', p.get('connections_url', default_connections_url)) %}
 {%- set prefix               = g.get('prefix', p.get('prefix', default_prefix)) %}
@@ -46,13 +50,15 @@
 
 {%- set sqldeveloper = {} %}
 {%- do sqldeveloper.update( {   'orahome'           : orahome,
-                                'user'		    : user,
                                 'release'           : release,
                                 'major'             : major,
                                 'minor'             : minor,
                                 'version'           : version,
                                 'source_url'        : source_url,
                                 'source_hash'       : source_hash,
+                                'prefs_url'         : prefs_url,
+                                'prefs_path'        : prefs_path,
+                                'user'              : user,
                                 'connections_url'   : connections_url,
                                 'prefix'            : prefix,
                                 'dl_opts'           : dl_opts,

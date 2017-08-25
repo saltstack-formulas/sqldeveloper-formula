@@ -14,6 +14,8 @@ sqldeveloper:
   dl_opts: -s
   unpack_opts: o
   archive_type: zip
+  prefs_url: undefined
+  prefs_path: undefined
   connections_url: undefined
   settings_url: undefined
   settings_path: undefined
