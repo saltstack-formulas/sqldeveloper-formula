@@ -57,8 +57,7 @@ sqldeveloper-get-preferences-importfile-from-path:
 
 sqldeveloper-preferences-file-perms:
   file.managed:
-    - names:
-      - /home/{{ sqldeveloper.user }}/my-preferences.xml
+    - name: /home/{{ sqldeveloper.user }}/my-preferences.xml
     - replace: False
     - mode: 644
     - user: {{ sqldeveloper.user }}
