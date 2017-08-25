@@ -44,6 +44,8 @@
 
 {%- set sqldeveloper = {} %}
 {%- do sqldeveloper.update( {   'orahome'           : orahome,
+                                'major'             : major,
+                                'minor'             : minor,
                                 'version'           : version,
                                 'source_url'        : source_url,
                                 'source_hash'       : source_hash,
