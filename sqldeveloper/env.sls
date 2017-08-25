@@ -28,16 +28,16 @@ sqldeveloper-connections-xml:
       - file: sqldeveloper-connections-dir
   {% endif %}
 
-  {% if sqldeveloper.settings_url != 'undefined' %}
+  {% if sqldeveloper.prefs_url != 'undefined' %}
 sqldeveloper-get-settings-importfile-from-url:
   cmd.run:
-    - name: curl -s -o /home/{{ sqldeveloper.user }}/.sqldeveloper/my-connections-passwords.xml '{{ sqldeveloper.settings_url }}'
-    - if_missing: /home/{{ sqldeveloper.user }}/my-connections-passwords.xml
-  {% elif sqldeveloper.settings_path != 'undefined' %}
+    - name: curl -s -o /home/{{ sqldeveloper.user }}/.sqldeveloper/my-preferences.xml '{{ sqldeveloper.prefs_url }}'
+    - if_missing: /home/{{ sqldeveloper.user }}/my-preferences.xml
+  {% elif sqldeveloper.prefs_path != 'undefined' %}
 sqldeveloper-get-settings-importfile-from-path:
   file.managed:
-    - name: /home/{{ sqldeveloper.user }}/my-connections-passwords.xml
-    - source: {{ sqldeveloper.settings_path }}
+    - name: /home/{{ sqldeveloper.user }}/my-preferences.xml
+    - source: {{ sqldeveloper.prefs_path }}
     - mode: 644
     - user: {{ sqldeveloper.user }}
       {% if salt['grains.get']('os_family') == 'Suse' or salt['grains.get']('os') == 'SUSE' %}
@@ -45,7 +45,7 @@ sqldeveloper-get-settings-importfile-from-path:
       {% else %}
     - group: {{ sqldeveloper.user }}
       {% endif %}
-    - if_missing: /home/{{ sqldeveloper.user }}/my-connections-passwords.xml
+    - if_missing: /home/{{ sqldeveloper.user }}/my-preferences.xml
   {% endif %}
 {% endif %}
 
