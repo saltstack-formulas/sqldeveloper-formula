@@ -22,11 +22,31 @@ sqldeveloper-connections-dir:
   {% if sqldeveloper.connections_url != 'undefined' %}
 sqldeveloper-connections-xml:
   cmd.run:
-    - name: curl -o /home/{{ sqldeveloper.user }}/.sqldeveloper/connections.xml '{{ sqldeveloper.connections_url }}'
+    - name: curl -s -o /home/{{ sqldeveloper.user }}/.sqldeveloper/connections.xml '{{ sqldeveloper.connections_url }}'
     - if_missing: /home/{{ sqldeveloper.user }}/.sqldeveloper/connections.xml
     - require:
       - file: sqldeveloper-connections-dir
   {% endif %}
+
+  {% if sqldeveloper.settings_url != 'undefined' %}
+sqldeveloper-get-settings-importfile-from-url:
+  cmd.run:
+    - name: curl -s -o /home/{{ sqldeveloper.user }}/.sqldeveloper/my-connections-passwords.xml '{{ sqldeveloper.settings_url }}'
+    - if_missing: /home/{{ sqldeveloper.user }}/my-connections-passwords.xml
+  {% elif sqldeveloper.settings_path != 'undefined' %}
+sqldeveloper-get-settings-importfile-from-path:
+  file.managed:
+    - name: /home/{{ sqldeveloper.user }}/my-sqldeveloper-settings.jar
+    - source: {{ sqldeveloper.settings_path }}
+    - mode: 644
+    - user: {{ sqldeveloper.user }}
+      {% if salt['grains.get']('os_family') == 'Suse' or salt['grains.get']('os') == 'SUSE' %}
+    - group: users
+      {% else %}
+    - group: {{ sqldeveloper.user }}
+      {% endif %}
+  {% endif %}
+{% endif %}
 
 sqldeveloper-product.conf:
   file.managed:
