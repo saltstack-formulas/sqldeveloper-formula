@@ -13,7 +13,7 @@ sqldeveloper-config:
     - context:
       orahome: {{ sqldeveloper.orahome }}/sqldeveloper
 
-{% if sqldeveloper.user != 'undefined' %}
+{% if sqldeveloper.user != 'undefined_user' %}
 sqldeveloper-connections-dir:
   file.directory:
     - name: /home/{{ sqldeveloper.user }}/.sqldeveloper/

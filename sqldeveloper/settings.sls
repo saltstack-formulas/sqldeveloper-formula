@@ -12,7 +12,7 @@
 {########## YOU MUST CHANGE THIS URL TO YOUR LOCAL MIRROR ####### #}
 {%- set mirror  = 'http://download.oracle.com/otn/java/sqldeveloper/' %}
 
-{%- set default_user            = 'undefined' %}
+{%- set default_user            = 'undefined_user' %}
 {%- set default_prefs_url       = 'undefined' %}
 {%- set default_prefs_path      = 'undefined' %}
 {%- set default_connections_url = 'undefined' %}

@@ -76,7 +76,7 @@ update-sqldeveloper-home-symlink:
     - onchanges:
       - archive: sqldeveloper-unpack-archive
 
-  {% if sqldeveloper.user != 'undefined' %}
+  {% if sqldeveloper.user != 'undefined_user' %}
 sqldeveloper-desktop-entry:
   file.managed:
     - source: salt://sqldeveloper/files/sqldeveloper.desktop
