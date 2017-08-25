@@ -4,7 +4,7 @@
 
 {%- if sqldeveloper.source_url is defined %}
 
-  {%- set archive_file = sqldeveloper.prefix + '/' + sqldeveloper.source_url.split('/') | last %}
+  {%- set archive_file = sqldeveloper.prefix ~ '/' ~ sqldeveloper.source_url.split('/') | last %}
 
 #runtime dependency
 sqldeveloper-libaio1:
