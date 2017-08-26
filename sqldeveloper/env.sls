@@ -52,6 +52,7 @@ sqldeveloper-get-preferences-importfile-from-path:
     - if_missing: /home/{{ sqldeveloper.user }}/my-preferences.xml
   {% endif %}
 
+  {% if sqldeveloper.prefs_url != 'undefined' or sqldeveloper.prefs_path != 'undefined' %}
 sqldeveloper-preferences-file-perms:
   file.managed:
     - name: /home/{{ sqldeveloper.user }}/my-preferences.xml
@@ -66,6 +67,7 @@ sqldeveloper-preferences-file-perms:
     - onchanges:
       - cmd: sqldeveloper-get-preferences-importfile-from-url
       - file: sqldeveloper-get-preferences-importfile-from-path
+  {% endif %}
 
 sqldeveloper-product.conf:
   file.managed:
