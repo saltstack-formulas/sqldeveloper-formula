@@ -14,6 +14,7 @@ sqldeveloper-config:
       orahome: {{ sqldeveloper.orahome }}/sqldeveloper
 
 {% if sqldeveloper.user != 'undefined_user' %}
+
 sqldeveloper-connections-dir:
   file.directory:
     - name: /home/{{ sqldeveloper.user }}/.sqldeveloper/
@@ -34,7 +35,9 @@ sqldeveloper-connections-xml:
       - file: sqldeveloper-connections-dir
   {% endif %}
 
+
   {% if sqldeveloper.prefs_url != 'undefined' %}
+
 sqldeveloper-get-preferences-importfile-from-url:
   cmd.run:
     - name: curl -s -o /home/{{ sqldeveloper.user }}/.sqldeveloper/my-preferences.xml '{{ sqldeveloper.prefs_url }}'
@@ -63,8 +66,6 @@ sqldeveloper-preferences-file-perms:
     - onchanges:
       - cmd: sqldeveloper-get-preferences-importfile-from-url
       - file: sqldeveloper-get-preferences-importfile-from-path
-
-{% endif %}
 
 sqldeveloper-product.conf:
   file.managed:
@@ -95,7 +96,9 @@ sqldeveloper-product.conf_append:
     - text: 'SetJavaHome /usr/lib/java'
     - onchanges:
       - sqldeveloper-product.conf
+
 {% endif %}
+
 
 # Add sqldeveloper home to alternatives system
 sqldeveloperhome-alt-install:
