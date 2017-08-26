@@ -37,7 +37,7 @@
 
 {%- set prefs_url            = g.get('prefs_url', p.get('prefs_url', default_prefs_url )) %}
 {%- set prefs_path           = g.get('prefs_path', p.get('prefs_path', default_prefs_path )) %}
-{%- set user                 = g.get('default_user', salt['pillar.get']('default_user', p.get('default_user', default_user)) %}
+{%- set user                 = g.get('default_user', salt['pillar.get']('default_user', p.get('default_user', default_user)))%}
 {%- set connections_url      = g.get('connections_url', p.get('connections_url', default_connections_url)) %}
 {%- set prefix               = g.get('prefix', p.get('prefix', default_prefix)) %}
 {%- set dl_opts              = g.get('dl_opts', p.get('dl_opts', default_dl_opts)) %}
