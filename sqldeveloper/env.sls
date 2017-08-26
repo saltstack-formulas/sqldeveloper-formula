@@ -69,12 +69,20 @@ sqldeveloper-preferences-file-perms:
       - file: sqldeveloper-get-preferences-importfile-from-path
   {% endif %}
 
-sqldeveloper-product.conf:
+sqldeveloper-product-conf:
   file.managed:
     - name: /home/{{ sqldeveloper.user }}/.sqldeveloper/{{ release }}/product.conf
     - makedirs: True
+    - replace: False
     - require:
       - file: sqldeveloper-connections-dir
+
+sqldeveloper-product-conf-append:
+  file.append:
+    - name: /home/{{ sqldeveloper.user }}/.sqldeveloper/{{ release }}/product.conf
+    - text: 'SetJavaHome /usr/lib/java'
+    - onchanges:
+      - sqldeveloper-product-conf
 
 sqldeveloper-connections-permissions:
   file.recurse:
@@ -88,16 +96,9 @@ sqldeveloper-connections-permissions:
     - onchanges:
       - sqldeveloper-connections-dir
       - sqldeveloper-connections-xml
-      - sqldeveloper-product.conf
+      - sqldeveloper-product-conf
     - require:
       - file: sqldeveloper-connections-dir
-
-sqldeveloper-product.conf_append:
-  file.append:
-    - name: /home/{{ sqldeveloper.user }}/.sqldeveloper/{{ release }}/product.conf
-    - text: 'SetJavaHome /usr/lib/java'
-    - onchanges:
-      - sqldeveloper-product.conf
 
 {% endif %}
 
