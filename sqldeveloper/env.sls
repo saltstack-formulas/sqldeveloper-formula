@@ -28,6 +28,40 @@ sqldeveloper-product-conf:
     - contents:
       - SetJavaHome /usr/lib/java
 
+  {% if sqldeveloper.connections_url != 'undefined' %}
+sqldeveloper-connections-xml:
+  cmd.run:
+    - name: curl -s -o /home/{{ sqldeveloper.user }}/.sqldeveloper/connections.xml '{{ sqldeveloper.connections_url }}'
+    - if_missing: /home/{{ sqldeveloper.user }}/.sqldeveloper/connections.xml
+    - runas: root
+    - require:
+      - sqldeveloper-product-conf-dir
+    - require_in:
+      - sqldeveloper-user-permissions
+  {% endif %}
+
+  {% if sqldeveloper.prefs_url != 'undefined' %}
+sqldeveloper-get-preferences-importfile-from-url:
+  cmd.run:
+    - name: curl -s -o /home/{{ sqldeveloper.user }}/.sqldeveloper/my-preferences.xml '{{ sqldeveloper.prefs_url }}'
+    - runas: {{ sqldeveloper.user }}
+    - if_missing: /home/{{ sqldeveloper.user }}/my-preferences.xml
+    - require:
+      - sqldeveloper-product-conf-dir
+    - require_in:
+      - sqldeveloper-user-permissions
+  {% elif sqldeveloper.prefs_path != 'undefined' %}
+sqldeveloper-get-preferences-importfile-from-path:
+  file.managed:
+    - name: /home/{{ sqldeveloper.user }}/.sqldeveloper/my-preferences.xml
+    - source: {{ sqldeveloper.prefs_path }}
+    - if_missing: /home/{{ sqldeveloper.user }}/.sqldeveloper/my-preferences.xml
+    - require:
+      - sqldeveloper-product-conf-dir
+    - require_in:
+      - sqldeveloper-user-permissions
+  {% endif %}
+
 sqldeveloper-user-permissions:
   file.directory:
     - name: /home/{{ sqldeveloper.user }}/.sqldeveloper 
@@ -43,36 +77,8 @@ sqldeveloper-user-permissions:
       - group
       - mode
     - onchanges:
-      - sqldeveloper-product-conf
+      - sqldeveloper-product-conf-dir
 
-  {% if sqldeveloper.connections_url != 'undefined' %}
-sqldeveloper-connections-xml:
-  cmd.run:
-    - name: curl -s -o /home/{{ sqldeveloper.user }}/.sqldeveloper/connections.xml '{{ sqldeveloper.connections_url }}'
-    - if_missing: /home/{{ sqldeveloper.user }}/.sqldeveloper/connections.xml
-    - runas: {{ sqldeveloper.user }}
-    - require:
-      - sqldeveloper-user-permissions
-  {% endif %}
-
-  {% if sqldeveloper.prefs_url != 'undefined' %}
-sqldeveloper-get-preferences-importfile-from-url:
-  cmd.run:
-    - name: curl -s -o /home/{{ sqldeveloper.user }}/.sqldeveloper/my-preferences.xml '{{ sqldeveloper.prefs_url }}'
-    - runas: {{ sqldeveloper.user }}
-    - if_missing: /home/{{ sqldeveloper.user }}/my-preferences.xml
-    - require:
-      - sqldeveloper-product-permissions
-  {% elif sqldeveloper.prefs_path != 'undefined' %}
-
-sqldeveloper-get-preferences-importfile-from-path:
-  file.managed:
-    - name: /home/{{ sqldeveloper.user }}/.sqldeveloper/my-preferences.xml
-    - source: {{ sqldeveloper.prefs_path }}
-    - if_missing: /home/{{ sqldeveloper.user }}/.sqldeveloper/my-preferences.xml
-    - require:
-      - sqldeveloper-product-permissions
-  {% endif %}
 {% endif %}
 
 # Add sqldeveloper home to alternatives system
