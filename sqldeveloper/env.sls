@@ -25,12 +25,7 @@ sqldeveloper-connections-xml:
   cmd.run:
     - name: curl -s -o /home/{{ sqldeveloper.user }}/.sqldeveloper/connections.xml '{{ sqldeveloper.connections_url }}'
     - if_missing: /home/{{ sqldeveloper.user }}/.sqldeveloper/connections.xml
-    - user: {{ sqldeveloper.user }}
-   {% if salt['grains.get']('os_family') == 'Suse' or salt['grains.get']('os') == 'SUSE' %}
-    - group: users
-   {% else %}
-    - group: {{ sqldeveloper.user }}
-   {% endif %}
+    - runas: {{ sqldeveloper.user }}
     - require:
       - file: sqldeveloper-connections-dir
   {% endif %}
@@ -39,6 +34,7 @@ sqldeveloper-connections-xml:
 sqldeveloper-get-preferences-importfile-from-url:
   cmd.run:
     - name: curl -s -o /home/{{ sqldeveloper.user }}/.sqldeveloper/my-preferences.xml '{{ sqldeveloper.prefs_url }}'
+    - runas: {{ sqldeveloper.user }}
     - if_missing: /home/{{ sqldeveloper.user }}/my-preferences.xml
 
   {% elif sqldeveloper.prefs_path != 'undefined' %}
@@ -48,23 +44,12 @@ sqldeveloper-get-preferences-importfile-from-path:
     - name: /home/{{ sqldeveloper.user }}/my-preferences.xml
     - source: {{ sqldeveloper.prefs_path }}
     - if_missing: /home/{{ sqldeveloper.user }}/my-preferences.xml
-  {% endif %}
-
-  {% if sqldeveloper.prefs_url != 'undefined' or sqldeveloper.prefs_path != 'undefined' %}
-sqldeveloper-preferences-file-perms:
-  file.managed:
-    - name: /home/{{ sqldeveloper.user }}/my-preferences.xml
-    - replace: False
-    - mode: 644
     - user: {{ sqldeveloper.user }}
    {% if salt['grains.get']('os_family') == 'Suse' or salt['grains.get']('os') == 'SUSE' %}
     - group: users
    {% else %}
     - group: {{ sqldeveloper.user }}
    {% endif %}
-    - onchanges:
-      - cmd: sqldeveloper-get-preferences-importfile-from-url
-      - file: sqldeveloper-get-preferences-importfile-from-path
   {% endif %}
 
 sqldeveloper-product-conf:
