@@ -44,8 +44,8 @@ sqldeveloper-connections-xml:
 sqldeveloper-get-preferences-importfile-from-url:
   cmd.run:
     - name: curl -s -o /home/{{ sqldeveloper.user }}/.sqldeveloper/my-preferences.xml '{{ sqldeveloper.prefs_url }}'
-    - runas: {{ sqldeveloper.user }}
     - if_missing: /home/{{ sqldeveloper.user }}/my-preferences.xml
+    - runas: root
     - require:
       - sqldeveloper-product-conf-dir
     - require_in:
