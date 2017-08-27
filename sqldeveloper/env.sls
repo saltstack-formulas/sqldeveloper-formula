@@ -52,7 +52,7 @@ sqldeveloper-connections-xml:
     - if_missing: /home/{{ sqldeveloper.user }}/.sqldeveloper/connections.xml
     - runas: {{ sqldeveloper.user }}
     - require:
-      - sqldeveloper-product-permissions
+      - sqldeveloper-user-permissions
   {% endif %}
 
   {% if sqldeveloper.prefs_url != 'undefined' %}
