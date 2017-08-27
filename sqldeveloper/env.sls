@@ -18,6 +18,14 @@ sqldeveloper-config:
 sqldeveloper-connections-dir:
   file.directory:
     - name: /home/{{ sqldeveloper.user }}/.sqldeveloper/
+    - user: {{ sqldeveloper.user }}
+   {% if salt['grains.get']('os_family') == 'Suse' or salt['grains.get']('os') == 'SUSE' %}
+    - group: users
+   {% else %}
+    - group: {{ sqldeveloper.user }}
+   {% endif %}
+    - makedirs: True
+  {% endif %}
     - backupname: /home/{{ sqldeveloper.user }}/.bak
 
   {% if sqldeveloper.connections_url != 'undefined' %}
