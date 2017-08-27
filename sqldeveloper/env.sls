@@ -42,7 +42,6 @@ sqldeveloper-user-permissions:
       - user
       - group
       - mode
-{% endif %}
 
   {% if sqldeveloper.connections_url != 'undefined' %}
 sqldeveloper-connections-xml:
@@ -71,7 +70,6 @@ sqldeveloper-get-preferences-importfile-from-path:
     - require:
       - sqldeveloper-product-permissions
   {% endif %}
-
 {% endif %}
 
 # Add sqldeveloper home to alternatives system
