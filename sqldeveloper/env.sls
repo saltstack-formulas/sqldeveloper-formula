@@ -35,9 +35,7 @@ sqldeveloper-connections-xml:
       - file: sqldeveloper-connections-dir
   {% endif %}
 
-
   {% if sqldeveloper.prefs_url != 'undefined' %}
-
 sqldeveloper-get-preferences-importfile-from-url:
   cmd.run:
     - name: curl -s -o /home/{{ sqldeveloper.user }}/.sqldeveloper/my-preferences.xml '{{ sqldeveloper.prefs_url }}'
@@ -84,6 +82,7 @@ sqldeveloper-product-conf-append:
     - onchanges:
       - sqldeveloper-product-conf
 
+  {% if sqldeveloper.connections_url != 'undefined' %}
 sqldeveloper-connections-permissions:
   file.recurse:
     - name: /home/{{ sqldeveloper.user }}/.sqldeveloper
@@ -97,8 +96,7 @@ sqldeveloper-connections-permissions:
       - sqldeveloper-connections-dir
       - sqldeveloper-connections-xml
       - sqldeveloper-product-conf
-    - require:
-      - file: sqldeveloper-connections-dir
+{% endif %}
 
 {% endif %}
 
