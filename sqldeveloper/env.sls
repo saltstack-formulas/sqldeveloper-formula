@@ -53,10 +53,15 @@ sqldeveloper-get-preferences-importfile-from-path:
   {% endif %}
 
 sqldeveloper-product-conf:
-  file.managed:
-    - name: /home/{{ sqldeveloper.user }}/.sqldeveloper/{{ release }}/product.conf
+  file.directory:
+    - name: /home/{{ sqldeveloper.user }}/.sqldeveloper/{{ release }}
     - makedirs: True
-    - replace: False
+    - user: {{ sqldeveloper.user }}
+  {% if salt['grains.get']('os_family') == 'Suse' or salt['grains.get']('os') == 'SUSE' %}
+    - group: users
+  {% else %}
+    - group: {{ sqldeveloper.user }}
+  {% endif %}
     - require:
       - file: sqldeveloper-connections-dir
 
@@ -66,22 +71,6 @@ sqldeveloper-product-conf-append:
     - text: 'SetJavaHome /usr/lib/java'
     - onchanges:
       - sqldeveloper-product-conf
-
-  {% if sqldeveloper.connections_url != 'undefined' %}
-sqldeveloper-connections-permissions:
-  file.recurse:
-    - name: /home/{{ sqldeveloper.user }}/.sqldeveloper
-    - user: {{ sqldeveloper.user }}
-  {% if salt['grains.get']('os_family') == 'Suse' or salt['grains.get']('os') == 'SUSE' %}
-    - group: users
-  {% else %}
-    - group: {{ sqldeveloper.user }}
-  {% endif %}
-    - onchanges:
-      - sqldeveloper-connections-dir
-      - sqldeveloper-connections-xml
-      - sqldeveloper-product-conf
-{% endif %}
 
 {% endif %}
 
