@@ -20,7 +20,7 @@ sqldeveloper-product-conf-dir:
     - name: /home/{{ sqldeveloper.user }}/.sqldeveloper/{{ release }}
     - makedirs: True
     - require_in:
-      - file: sqldeveloper-connections-dir
+      - file: sqldeveloper-product-conf
 
 sqldeveloper-product-conf:
   file.managed:
@@ -42,6 +42,8 @@ sqldeveloper-user-permissions:
       - user
       - group
       - mode
+    - onchanges:
+      - sqldeveloper-product-conf
 
   {% if sqldeveloper.connections_url != 'undefined' %}
 sqldeveloper-connections-xml:
@@ -62,6 +64,7 @@ sqldeveloper-get-preferences-importfile-from-url:
     - require:
       - sqldeveloper-product-permissions
   {% elif sqldeveloper.prefs_path != 'undefined' %}
+
 sqldeveloper-get-preferences-importfile-from-path:
   file.managed:
     - name: /home/{{ sqldeveloper.user }}/.sqldeveloper/my-preferences.xml
