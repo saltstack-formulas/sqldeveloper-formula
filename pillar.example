@@ -1,8 +1,8 @@
 orahome: /opt/oracle/12_2
 oracle_release: 12_2
-#default_user: undefined_user
+default_user: undefined_user
 sqldeveloper:
-  #default_user: undefined_user
+  default_user: undefined_user
   release: 4
   major: 2
   minor: 0
