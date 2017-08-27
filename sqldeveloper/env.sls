@@ -15,18 +15,34 @@ sqldeveloper-config:
 
 {% if sqldeveloper.user != 'undefined_user' %}
 
-sqldeveloper-connections-dir:
+sqldeveloper-product-conf-dir:
   file.directory:
-    - name: /home/{{ sqldeveloper.user }}/.sqldeveloper/
-    - user: {{ sqldeveloper.user }}
-   {% if salt['grains.get']('os_family') == 'Suse' or salt['grains.get']('os') == 'SUSE' %}
-    - group: users
-   {% else %}
-    - group: {{ sqldeveloper.user }}
-   {% endif %}
+    - name: /home/{{ sqldeveloper.user }}/.sqldeveloper/{{ release }}
     - makedirs: True
+    - require_in:
+      - file: sqldeveloper-connections-dir
+
+sqldeveloper-product-conf:
+  file.managed:
+    - name: /home/{{ sqldeveloper.user }}/.sqldeveloper/{{ release }}/product.conf
+    - contents:
+      - SetJavaHome /usr/lib/java
+
+sqldeveloper-user-permissions:
+  file.directory:
+    - name: /home/{{ sqldeveloper.user }}/.sqldeveloper 
+    - mode:  744
+    - user: {{ sqldeveloper.user }}
+  {% if salt['grains.get']('os_family') == 'Suse' or salt['grains.get']('os') == 'SUSE' %}
+    - group: users
+  {% else %}
+    - group: {{ sqldeveloper.user }}
   {% endif %}
-    - backupname: /home/{{ sqldeveloper.user }}/.bak
+    - recurse:
+      - user
+      - group
+      - mode
+{% endif %}
 
   {% if sqldeveloper.connections_url != 'undefined' %}
 sqldeveloper-connections-xml:
@@ -35,7 +51,7 @@ sqldeveloper-connections-xml:
     - if_missing: /home/{{ sqldeveloper.user }}/.sqldeveloper/connections.xml
     - runas: {{ sqldeveloper.user }}
     - require:
-      - file: sqldeveloper-connections-dir
+      - sqldeveloper-product-permissions
   {% endif %}
 
   {% if sqldeveloper.prefs_url != 'undefined' %}
@@ -44,44 +60,19 @@ sqldeveloper-get-preferences-importfile-from-url:
     - name: curl -s -o /home/{{ sqldeveloper.user }}/.sqldeveloper/my-preferences.xml '{{ sqldeveloper.prefs_url }}'
     - runas: {{ sqldeveloper.user }}
     - if_missing: /home/{{ sqldeveloper.user }}/my-preferences.xml
-
+    - require:
+      - sqldeveloper-product-permissions
   {% elif sqldeveloper.prefs_path != 'undefined' %}
-
 sqldeveloper-get-preferences-importfile-from-path:
   file.managed:
-    - name: /home/{{ sqldeveloper.user }}/my-preferences.xml
+    - name: /home/{{ sqldeveloper.user }}/.sqldeveloper/my-preferences.xml
     - source: {{ sqldeveloper.prefs_path }}
-    - if_missing: /home/{{ sqldeveloper.user }}/my-preferences.xml
-    - user: {{ sqldeveloper.user }}
-   {% if salt['grains.get']('os_family') == 'Suse' or salt['grains.get']('os') == 'SUSE' %}
-    - group: users
-   {% else %}
-    - group: {{ sqldeveloper.user }}
-   {% endif %}
-  {% endif %}
-
-sqldeveloper-product-conf:
-  file.directory:
-    - name: /home/{{ sqldeveloper.user }}/.sqldeveloper/{{ release }}
-    - makedirs: True
-    - user: {{ sqldeveloper.user }}
-  {% if salt['grains.get']('os_family') == 'Suse' or salt['grains.get']('os') == 'SUSE' %}
-    - group: users
-  {% else %}
-    - group: {{ sqldeveloper.user }}
-  {% endif %}
+    - if_missing: /home/{{ sqldeveloper.user }}/.sqldeveloper/my-preferences.xml
     - require:
-      - file: sqldeveloper-connections-dir
-
-sqldeveloper-product-conf-append:
-  file.append:
-    - name: /home/{{ sqldeveloper.user }}/.sqldeveloper/{{ release }}/product.conf
-    - text: 'SetJavaHome /usr/lib/java'
-    - onchanges:
-      - sqldeveloper-product-conf
+      - sqldeveloper-product-permissions
+  {% endif %}
 
 {% endif %}
-
 
 # Add sqldeveloper home to alternatives system
 sqldeveloperhome-alt-install:
