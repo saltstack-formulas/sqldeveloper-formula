@@ -41,6 +41,11 @@ sqldeveloper-download-archive:
       - file: sqldeveloper-remove-prev-archive
     - require_in:
       - archive: sqldeveloper-unpack-archive
+    {% if grains['saltversioninfo'] >= [2017, 7, 0] %}
+    - retry:
+        attempts: {{ sqldeveloper.dl_retries }}
+        interval: {{ sqldeveloper.dl_interval }}
+    {% endif %}
 
   {%- if grains['saltversioninfo'] <= [2016, 11, 6] and sqldeveloper.source_hash %}
     # See: https://github.com/saltstack/salt/pull/41914
@@ -71,7 +76,7 @@ sqldeveloper-unpack-archive:
 update-sqldeveloper-home-symlink:
   file.symlink:
     - name: {{ sqldeveloper.orahome }}/sqldeveloper
-    - target: {{ sqldeveloper.real_home }}
+    - target: {{ sqldeveloper.realhome }}
     - force: True
     - onchanges:
       - archive: sqldeveloper-unpack-archive

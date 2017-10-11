@@ -86,14 +86,14 @@ sqldeveloperhome-alt-install:
   alternatives.install:
     - name: sqldeveloper-home
     - link: {{ sqldeveloper.orahome }}/sqldeveloper
-    - path: {{ sqldeveloper.real_home }}
+    - path: {{ sqldeveloper.realhome }}
     - priority: {{ sqldeveloper.alt_priority }}
 
 # Set sqldeveloper alternatives
 sqldeveloperhome-alt-set:
   alternatives.set:
     - name: sqldeveloper-home
-    - path: {{ sqldeveloper.real_home }}
+    - path: {{ sqldeveloper.realhome }}
     - onchanges:
       - alternatives: sqldeveloperhome-alt-install
 

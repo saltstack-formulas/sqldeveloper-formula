@@ -22,31 +22,35 @@
   ###### Hash for version 4.2.0.17 linux binary ####
 {%- set default_source_hash  = 'md5=158f54967e563a013b9656918e628427' %}
 
-{%- set source_url           = g.get('source_url', p.get('source_url', default_source_url)) %}
+{%- set source_url    = g.get('source_url', p.get('source_url', default_source_url)) %}
 {%- if source_url == default_source_url %}
-  {%- set source_hash        = default_source_hash %}
+  {%- set source_hash = default_source_hash %}
 {%- else %}
-  {%- set source_hash        = g.get('source_hash', p.get('source_hash', default_source_hash)) %}
+  {%- set source_hash = g.get('source_hash', p.get('source_hash', default_source_hash)) %}
 {%- endif %}
 
 {%- set default_dl_opts      = ' -s ' %}
+{%- set default_dl_retries   = '1' %}
+{%- set default_dl_interval  = '60' %}
 {%- set default_unpack_opts  = 'o' %}
 {%- set default_symlink      = '/usr/bin/sqldeveloper' %}
-{%- set default_real_home    = default_prefix ~ 'sqldeveloper' %}
+{%- set default_realhome     = default_prefix ~ 'sqldeveloper' %}
 {%- set default_alt_priority = '30' %}
 
-{%- set prefs_url            = g.get('prefs_url', p.get('prefs_url', default_prefs_url )) %}
-{%- set prefs_path           = g.get('prefs_path', p.get('prefs_path', default_prefs_path )) %}
-{%- set user                 = g.get('default_user', salt['pillar.get']('default_user', p.get('default_user', default_user)))%}
-{%- set connections_url      = g.get('connections_url', p.get('connections_url', default_connections_url)) %}
-{%- set prefix               = g.get('prefix', p.get('prefix', default_prefix)) %}
-{%- set dl_opts              = g.get('dl_opts', p.get('dl_opts', default_dl_opts)) %}
-{%- set unpack_opts          = g.get('unpack_opts', p.get('unpack_opts', default_unpack_opts)) %}
-{%- set archive_type         = g.get('archive_type', p.get('archive_type', default_archive_type)) %}
-{%- set symlink              = g.get('symlink', p.get('symlink', default_symlink)) %}
-{%- set alt_priority         = g.get('alt_priority', p.get('alt_priority', default_alt_priority)) %}
-{%- set real_home            = g.get('real_home', p.get('real_home', default_real_home)) %}
-{%- set realcmd              = real_home ~ '/sqldeveloper/bin/sqldeveloper' %}
+{%- set prefs_url       = g.get('prefs_url', p.get('prefs_url', default_prefs_url )) %}
+{%- set prefs_path      = g.get('prefs_path', p.get('prefs_path', default_prefs_path )) %}
+{%- set user            = g.get('default_user', salt['pillar.get']('default_user', p.get('default_user', default_user)))%}
+{%- set connections_url = g.get('connections_url', p.get('connections_url', default_connections_url)) %}
+{%- set prefix          = g.get('prefix', p.get('prefix', default_prefix)) %}
+{%- set dl_opts         = g.get('dl_opts', p.get('dl_opts', default_dl_opts)) %}
+{%- set dl_retries      = g.get('dl_retries', p.get('dl_retries', default_dl_retries)) %}
+{%- set dl_interval     = g.get('dl_interval', p.get('dl_interval', default_dl_interval)) %}
+{%- set unpack_opts     = g.get('unpack_opts', p.get('unpack_opts', default_unpack_opts)) %}
+{%- set archive_type    = g.get('archive_type', p.get('archive_type', default_archive_type)) %}
+{%- set symlink         = g.get('symlink', p.get('symlink', default_symlink)) %}
+{%- set alt_priority    = g.get('alt_priority', p.get('alt_priority', default_alt_priority)) %}
+{%- set realhome        = g.get('realhome', p.get('realhome', default_realhome)) %}
+{%- set realcmd         = realhome ~ '/sqldeveloper/bin/sqldeveloper' %}
 
 {%- set sqldeveloper = {} %}
 {%- do sqldeveloper.update( {   'orahome'           : orahome,
@@ -62,10 +66,12 @@
                                 'connections_url'   : connections_url,
                                 'prefix'            : prefix,
                                 'dl_opts'           : dl_opts,
+                                'dl_retries'        : dl_retries,
+                                'dl_interval'        : dl_interval,
                                 'unpack_opts'       : unpack_opts,
                                 'archive_type'      : archive_type,
                                 'symlink'           : symlink,
                                 'alt_priority'      : alt_priority,
-                                'real_home'         : real_home,
+                                'realhome'          : realhome,
                                 'realcmd'           : realcmd,
                         }) %}

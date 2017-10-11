@@ -12,6 +12,7 @@ sqldeveloper:
   source_hash: md5=158f54967e563a013b9656918e628427
   #dl_opts: --no-check-certificate --no-cookies --header "Cookie: oraclelicense=accept-securebackup-cookie"
   dl_opts: -s
+  dl_retries: 2
   unpack_opts: o
   archive_type: zip
   prefs_url: undefined
@@ -19,7 +20,7 @@ sqldeveloper:
   connections_url: undefined
   symlink: /usr/bin/sqldeveloper
   prefix: /usr/share/oracle/12_2
-  real_home: /usr/share/oracle/12_2/sqldeveloper
+  realhome: /usr/share/oracle/12_2/sqldeveloper
   realcmd: /usr/share/oracle/12_2/sqldeveloper/bin/sqldeveloper
   alt_priority: 30
 
