@@ -1,14 +1,14 @@
-=============
-sqldeveloper-formula
-=============
+========
+sqldeveloper
+========
 
-This formula will set up and configure Oracle SqlDeveloper software sourced from URL.
+Formula to download and configure the SQLDEVELOPER software from Oracle.
 
 .. note::
 
     See the full `Salt Formulas installation and usage instructions
     <http://docs.saltstack.com/en/latest/topics/development/conventions/formulas.html>`_.
-
+    
 Available states
 ================
 
@@ -16,16 +16,26 @@ Available states
     :local:
 
 ``sqldeveloper``
----------
+------------
+Downloads the archives from uri specified as pillar, unpack locally, and installs on the Operating System.
 
-Downloads archives from **sqldeveloper:source_url** and unpacks them to oracle_home.
+.. note::
 
-``sqldeveloper.env``
--------------
+This formula installs a specific version of sqldeveloper as default. Can be overridden by version pillar.
 
-Full support for linux alternatives system.
-Adds /etc/profile.d/sqldeveloper.sh, setting SQLDEVELOPER_HOME, ORACLE_HOME, ./bin in user PATH.
+``sqldeveloper.developer``
+------------
+Create desktop shortcuts. Optionally download 'connections.xml' file from url/share to 'user' (pillar) home directory.
+
+
+``sqldeveloper.linuxenv``
+------------
+On Linux, the PATH is set for all system users by adding software profile to /etc/profile.d/ directory. Full support for debian linuxenv in supported Linux distributions (i.e. not Archlinux).
+
+.. note::
+
+The linux-linuxenv 'priority' pillar value must be updated for each newly installed release/editions.
 
 
 Please see the pillar.example for configuration.
-
+Tested on Linux (Ubuntu, Fedora, Arch, and Suse), MacOS. Not verified on Windows OS.

@@ -2,7 +2,8 @@
 Encoding=UTF-8
 Name=SQL Developer
 Comment=Oracle SQL Developer
-Icon=/opt/sqldeveloper/icon.png
+Icon={{ home }}/icon.png
+Exec={{ home }}/{{ command }}
 Exec=sqldeveloper
 Terminal=false
 Type=Application

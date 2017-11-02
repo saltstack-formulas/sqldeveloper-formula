@@ -1,0 +1,8 @@
+name: sqldeveloper
+os: MacOS, Windows, Linux
+os_family: RedHat, Debian, Suse, FreeBSD, MacOS, Windows
+version: 201710
+release: 1.1
+minimum_version: 2016.3
+summary: Formula for installing sqldeveloper
+description: Formula for installing SqlDeveloper
