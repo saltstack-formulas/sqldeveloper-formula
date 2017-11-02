@@ -8,7 +8,7 @@ sqldeveloper:
 
   oracle:
     orahome: /opt/oracle/12_2
-    #Override 'uri' (pillar) to avoid oracle login
+    #Override 'uri' to avoid oracle login
     uri: http://download.oracle.com/otn/java/sqldeveloper/
     #See oracle numbering: https://docs.oracle.com/cd/B28359_01/server.111/b28310/dba004.htm
     version: 17.3.1.279.0537
@@ -29,6 +29,7 @@ sqldeveloper:
 
   prefs:
     user: undefined_user
-    xmlurl: undefined
-    xmldir: undefined
+    #See http://www.thatjeffsmith.com/archive/2014/05/migrating-oracle-sql-developer-connections-with-passwords/
+    xmlurl: 
+    xmldir:
     xmlfile: connections-with-passwords.xml
