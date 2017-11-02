@@ -25,7 +25,8 @@ sqldeveloper-desktop-shortcut-add:
     - runas: {{ sqldeveloper.prefs.user }}
     - require:
       - file: sqldeveloper-desktop-shortcut-add
-  {% else %}
+  {% elif grains.os not in ('Windows') %}
+  #Linux
   file.managed:
     - source: salt://sqldeveloper/files/sqldeveloper.desktop
     - name: {{ sqldeveloper.homes }}/{{ sqldeveloper.prefs.user }}/Desktop/sqldeveloper.desktop

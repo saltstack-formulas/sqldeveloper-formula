@@ -4,8 +4,9 @@ sqldeveloper-create-extract-dirs:
   file.directory:
     - names:
       - '{{ sqldeveloper.tmpdir }}'
-      - '{{ sqldeveloper.oracle.realhome }}'
+      - '{{ sqldeveloper.oracle.home }}'
   {% if grains.os not in ('MacOS', 'Windows') %}
+      - '{{ sqldeveloper.oracle.realhome }}'
     - user: root
     - group: root
     - mode: 755
