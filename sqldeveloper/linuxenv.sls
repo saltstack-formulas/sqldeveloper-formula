@@ -23,7 +23,7 @@ sqldeveloper-linux-profile:
     - context:
       home: '{{ sqldeveloper.oracle.home }}'
     - require:
-      - file: sqldeveloper-libaio1
+      - pkg: sqldeveloper-libaio1
 
 sqldeveloper-update-home-symlink:
   file.symlink:

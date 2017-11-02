@@ -31,7 +31,7 @@ sqldeveloper-desktop-shortcut-add:
     - name: {{ sqldeveloper.homes }}/{{ sqldeveloper.prefs.user }}/Desktop/sqldeveloper.desktop
     - user: {{ sqldeveloper.prefs.user }}
     - makedirs: True
-      {% if salt['grains.get']('os_family') in ('Suse') %} 
+      {% if grains.os_family in ('Suse') %} 
     - group: users
       {% else %}
     - group: {{ sqldeveloper.prefs.user }}
@@ -39,7 +39,8 @@ sqldeveloper-desktop-shortcut-add:
     - mode: 644
     - force: True
     - template: jinja
-    - onlyif: test -f {{ sqldeveloper.realcmd }}
+      #On Suse realcmd cannot be resolved??
+    - onlyif: test -d {{ sqldeveloper.oracle.realhome }}
     - context:
       home: {{ sqldeveloper.oracle.home }}
       command: {{ sqldeveloper.command }}
