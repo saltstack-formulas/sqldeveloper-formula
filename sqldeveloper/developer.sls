@@ -1,4 +1,4 @@
-{% from "sqldeveloper/map.jinja" xml sqldeveloper with context %}
+{% from "sqldeveloper/map.jinja" import sqldeveloper with context %}
 
 {% if sqldeveloper.prefs.user not in (None, 'undefined', 'undefined_user') %}
 
