@@ -7,7 +7,7 @@ sqldeveloper:
   arch: no-jre
 
   oracle:
-    orahome: /opt/oracle/12_2
+    home: /opt/oracle/12_2
     #Override 'uri' to avoid oracle login
     uri: http://download.oracle.com/otn/java/sqldeveloper/
     #See oracle numbering: https://docs.oracle.com/cd/B28359_01/server.111/b28310/dba004.htm
@@ -25,7 +25,7 @@ sqldeveloper:
 
   linux:
     symlink: /usr/bin/sqldeveloper
-    priority: 170
+    altpriority: 170
 
   prefs:
     user: undefined_user

@@ -8,11 +8,11 @@
 {% set release = version.split('.')[0] ~ '_' ~ version.split('.')[1] ~ '_' ~ version.split('.')[2] %} 
 
 # OS mapping
-{% set defs.sqldeveloper.oracle.md5 = { 'sqlcl': 'md5=65862f2a970a363a62e1053dc8251078' } %}
 {% set osmap = salt['grains.filter_by']({
 
     'Linux'  : { 'prefix'     : defs.sqldeveloper.prefix ~ '/' ~ release ~ '/',
-                 'oracle:md5' : { 'sqldeveloper': 'md5=5e077af62c1c5a526055cd9f810a3ee0' },
+                 'oracle:md5' : { 'sqldeveloper': 'md5=5e077af62c1c5a526055cd9f810a3ee0',
+                                  'sqlcl': 'md5=65862f2a970a363a62e1053dc8251078', },
      },
     'Windows': { 'prefix'     : 'C:\\oracle\\' ~ release ~ '\\',
                  'tmpdir'     : 'C:\\temp\\oracletmp_' ~ release ~ '\\',
@@ -20,11 +20,13 @@
                  'command'    : '\\sqldeveloper',
                  'arch'       : 'no-jre',
                  'oracle:home': 'C:\\oracle\\' ~ release ~ '\\',
-                 'oracle:md5' : { 'sqldeveloper': 'md5=5e077af62c1c5a526055cd9f810a3ee0' },
+                 'oracle:md5' : { 'sqldeveloper': 'md5=5e077af62c1c5a526055cd9f810a3ee0',
+                                  'sqlcl': 'md5=65862f2a970a363a62e1053dc8251078', },
      },
     'Darwin' : { 'homes'      : '/Users/',
                  'arch'       : 'macosx.app',
-                 'oracle:md5' : { 'sqldeveloper': 'md5=2969c67ea5b856655adff9b8695746f1' },
+                 'oracle:md5' : { 'sqldeveloper': 'md5=2969c67ea5b856655adff9b8695746f1',
+                                  'sqlcl': 'md5=65862f2a970a363a62e1053dc8251078', },
      },
   }, grain='kernel', default='Linux')
 %} 
@@ -32,10 +34,9 @@
 # Merge osmap onto defaults before merging pillars
 {% do defs.sqldeveloper.update(osmap) %}
 {% set sqldeveloper = salt['pillar.get']( 'sqldeveloper', default=defs.sqldeveloper, merge=True) %}
-{% do sqldeveloper.oracle.update({ 
-                   'release' : release,
-                   'uri'     : sqldeveloper.oracle.uri,
-                   'realhome': sqldeveloper.prefix ~ 'sqldeveloper',
-                   'realcmd' : sqldeveloper.prefix ~ 'sqldeveloper' ~ sqldeveloper.command  })
+{% do sqldeveloper.oracle.update({ 'release' : release,
+                         'uri'     : sqldeveloper.oracle.uri,
+                         'realhome': sqldeveloper.prefix ~ 'sqldeveloper',
+                         'realcmd' : sqldeveloper.prefix ~ 'sqldeveloper' ~ sqldeveloper.command,  })
 %}
 

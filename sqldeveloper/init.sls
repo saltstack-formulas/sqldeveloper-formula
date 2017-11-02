@@ -46,8 +46,6 @@ sqldeveloper-extract-{{ pkg }}:
        {% if grains['saltversioninfo'] >= [2016, 11, 0] %}
     - enforce_toplevel: False
        {% endif %}
-    - require_in:
-      - file: sqldeveloper-complete-sqldeveloper
  
 {% endfor %}
 
