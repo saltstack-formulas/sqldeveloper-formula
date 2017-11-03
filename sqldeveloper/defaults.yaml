@@ -25,7 +25,8 @@ sqldeveloper:
 
   linux:
     symlink: /usr/bin/sqldeveloper
-    altpriority: 170
+    #debian alternatives is disabled by default. Activated via pillar value.
+    altpriority: 0
 
   prefs:
     user: undefined_user

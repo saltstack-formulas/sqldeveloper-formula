@@ -9,8 +9,9 @@ sqldeveloper:
       # no-jre (linux/windows)
       sqldeveloper: md5=158f54967e563a013b9656918e628427
   linux:
-    # Increase priority for every version installed
-    altpriority: 190
+    #Enable Debian alternatives feature by setting nonzero 'altpriority' value here.
+    #Increase same value on each subsequent software installation.
+    #altpriority: 170
   dl:
     retries: 1
     interval: 30

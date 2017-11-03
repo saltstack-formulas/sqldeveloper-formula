@@ -33,9 +33,9 @@ sqldeveloper-update-home-symlink:
     - require:
       - file: sqldeveloper-linux-profile
 
-## Debian Alternatives ##
-
-  {% if grains.os_family not in ('Arch') %}
+  ## Debian Alternatives ##
+  {% if sqldeveloper.linux.altpriority > 0 %}
+     {% if grains.os_family not in ('Arch') %}
 
 # Add swhome to alternatives system
 sqldeveloper-home-alt-install:
@@ -75,6 +75,7 @@ sqldeveloper-alt-set:
     - onchanges:
       - alternatives: sqldeveloper-alt-install
 
+     {% endif %}
   {% endif %}
 
 {% endif %}
