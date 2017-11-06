@@ -30,7 +30,7 @@ sqldeveloper-extract-{{ pkg }}:
       - sqldeveloper-create-extract-dirs
     - require_in:
       - archive: sqldeveloper-extract-{{ pkg }}
-  {% if sqldeveloper.dl.skip_hashcheck in ('None', 'False', 'false', 'FALSE') %}
+  {% if sqldeveloper.dl.skip_hashcheck not in ('True', True) %}
   module.run:
     - name: file.check_hash
     - path: '{{ sqldeveloper.tmpdir }}/{{ pkg }}.{{ sqldeveloper.dl.suffix }}'

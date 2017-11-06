@@ -21,7 +21,7 @@ sqldeveloper:
     interval: 30
     retries: 1
     suffix: zip
-    skip_hashcheck: False
+    skip_hashcheck:
 
   linux:
     symlink: /usr/bin/sqldeveloper
@@ -29,7 +29,7 @@ sqldeveloper:
     altpriority: 0
 
   prefs:
-    user: undefined_user
+    user:
     #See http://www.thatjeffsmith.com/archive/2014/05/migrating-oracle-sql-developer-connections-with-passwords/
     xmlurl: 
     xmldir:
