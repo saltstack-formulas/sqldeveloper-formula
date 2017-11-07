@@ -1,11 +1,11 @@
 {% from "sqldeveloper/map.jinja" import sqldeveloper with context %}
 
-{% if grains.os not in ('MacOS', 'Windows') %}
+{% if grains.os not in ('MacOS', 'Windows',) %}
 
 #runtime dependency
 sqldeveloper-libaio1:
   pkg.installed:
-    {% if grains.os in ('Ubuntu', 'Suse', 'SUSE') %}
+    {% if grains.os in ('Ubuntu', 'Suse', 'SUSE',) %}
     - name: libaio1
     {%- else %}
     - name: libaio
@@ -35,7 +35,7 @@ sqldeveloper-update-home-symlink:
 
   ## Debian Alternatives ##
   {% if sqldeveloper.linux.altpriority > 0 %}
-     {% if grains.os_family not in ('Arch') %}
+     {% if grains.os_family not in ('Arch',) %}
 
 # Add swhome to alternatives system
 sqldeveloper-home-alt-install:

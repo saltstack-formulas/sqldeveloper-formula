@@ -1,6 +1,6 @@
 {% from "sqldeveloper/map.jinja" import sqldeveloper with context %}
 
-{% if sqldeveloper.prefs.user not in (None, 'undefined', 'undefined_user') %}
+{% if sqldeveloper.prefs.user not in (None, 'undefined', 'undefined_user', '',) %}
 
   {% if grains.os == 'MacOS' %}
 sqldeveloper-desktop-shortcut-clean:
@@ -25,14 +25,14 @@ sqldeveloper-desktop-shortcut-add:
     - runas: {{ sqldeveloper.prefs.user }}
     - require:
       - file: sqldeveloper-desktop-shortcut-add
-  {% elif grains.os not in ('Windows') %}
+  {% elif grains.os not in ('Windows',) %}
   #Linux
   file.managed:
     - source: salt://sqldeveloper/files/sqldeveloper.desktop
     - name: {{ sqldeveloper.homes }}/{{ sqldeveloper.prefs.user }}/Desktop/sqldeveloper.desktop
     - user: {{ sqldeveloper.prefs.user }}
     - makedirs: True
-      {% if grains.os_family in ('Suse') %} 
+      {% if grains.os_family in ('Suse',) %} 
     - group: users
       {% else %}
     - group: {{ sqldeveloper.prefs.user }}
@@ -64,7 +64,7 @@ sqldeveloper-product-conf-permissions:
     - name: {{ sqldeveloper.homes }}/{{ sqldeveloper.prefs.user }}/.sqldeveloper
     - mode:  744
     - user: {{ sqldeveloper.prefs.user }}
-    {% if grains.os_family in ('Suse') or grains.os in ('SUSE') %}
+    {% if grains.os_family in ('Suse',) or grains.os in ('SUSE',) %}
     - group: users
     {% else %}
     - group: {{ sqldeveloper.prefs.user }}
@@ -90,9 +90,9 @@ sqldeveloper-prefs-xmlfile:
     - source: {{ sqldeveloper.prefs.xmldir }}/{{ sqldeveloper.prefs.xmlfile }}
     - user: {{ sqldeveloper.prefs.user }}
     - makedirs: True
-        {% if grains.os_family in ('Suse') %}
+        {% if grains.os_family in ('Suse',) %}
     - group: users
-        {% elif grains.os not in ('MacOS') %}
+        {% elif grains.os not in ('MacOS',) %}
         #inherit Darwin ownership
     - group: {{ sqldeveloper.prefs.user }}
         {% endif %}

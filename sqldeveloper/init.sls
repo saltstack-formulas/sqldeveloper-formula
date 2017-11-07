@@ -5,7 +5,7 @@ sqldeveloper-create-extract-dirs:
     - names:
       - '{{ sqldeveloper.tmpdir }}'
       - '{{ sqldeveloper.oracle.home }}'
-  {% if grains.os not in ('MacOS', 'Windows') %}
+  {% if grains.os not in ('MacOS', 'Windows',) %}
       - '{{ sqldeveloper.oracle.realhome }}'
     - user: root
     - group: root
@@ -30,7 +30,7 @@ sqldeveloper-extract-{{ pkg }}:
       - sqldeveloper-create-extract-dirs
     - require_in:
       - archive: sqldeveloper-extract-{{ pkg }}
-  {% if sqldeveloper.dl.skip_hashcheck not in ('True', True) %}
+  {% if sqldeveloper.dl.skip_hashcheck not in ('True', True,) %}
   module.run:
     - name: file.check_hash
     - path: '{{ sqldeveloper.tmpdir }}/{{ pkg }}.{{ sqldeveloper.dl.suffix }}'
