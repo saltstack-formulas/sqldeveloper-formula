@@ -81,6 +81,5 @@ sqldeveloper-install-sqldeveloper:
   file.absent:
      # source macapp no longer needed
     - name: '{{ sqldeveloper.prefix }}/SQLDeveloper.app'
-    - recurse: True
   {% endif %}
 
