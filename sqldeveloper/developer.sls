@@ -32,11 +32,12 @@ sqldeveloper-desktop-shortcut-add:
     - name: {{ sqldeveloper.homes }}/{{ sqldeveloper.prefs.user }}/Desktop/sqldeveloper.desktop
     - user: {{ sqldeveloper.prefs.user }}
     - makedirs: True
-      {% if grains.os_family in ('Suse',) %} 
+        {% if grains.os_family in ('Suse',) %}
     - group: users
-      {% else %}
+        {% elif grains.os not in ('MacOS',) %}
+        #For MacOS, just inherit group from Darwin
     - group: {{ sqldeveloper.prefs.user }}
-      {% endif %}
+        {% endif %}
     - mode: 644
     - force: True
     - template: jinja
@@ -64,11 +65,12 @@ sqldeveloper-product-conf-permissions:
     - name: {{ sqldeveloper.homes }}/{{ sqldeveloper.prefs.user }}/.sqldeveloper
     - mode:  744
     - user: {{ sqldeveloper.prefs.user }}
-    {% if grains.os_family in ('Suse',) or grains.os in ('SUSE',) %}
+        {% if grains.os_family in ('Suse',) %}
     - group: users
-    {% else %}
+        {% elif grains.os not in ('MacOS',) %}
+        #For MacOS, just inherit group from Darwin
     - group: {{ sqldeveloper.prefs.user }}
-    {% endif %}
+        {% endif %}
     - recurse:
       - user
       - group
@@ -93,7 +95,7 @@ sqldeveloper-prefs-xmlfile:
         {% if grains.os_family in ('Suse',) %}
     - group: users
         {% elif grains.os not in ('MacOS',) %}
-        #inherit Darwin ownership
+        #For MacOS, just inherit group from Darwin
     - group: {{ sqldeveloper.prefs.user }}
         {% endif %}
     - if_missing: {{ sqldeveloper.homes }}/{{ sqldeveloper.prefs.user }}/{{ sqldeveloper.prefs.xmlfile }}
