@@ -7,32 +7,38 @@
 {% set version = salt['pillar.get']('sqldeveloper:oracle:version', defs.sqldeveloper.oracle.version ) %}
 {% set release = version.split('.')[0] ~ '_' ~ version.split('.')[1] ~ '_' ~ version.split('.')[2] %} 
 
-# OS mapping
 {% set osmap = salt['grains.filter_by']({
-
     'Linux'  : { 'prefix'     : defs.sqldeveloper.prefix ~ '/' ~ release ~ '/',
-                 'oracle:md5' : { 'sqldeveloper': 'md5=5e077af62c1c5a526055cd9f810a3ee0',
-                                  'sqlcl': 'md5=65862f2a970a363a62e1053dc8251078', },
-     },
+        },
     'Windows': { 'prefix'     : 'C:\\oracle\\' ~ release ~ '\\',
                  'tmpdir'     : 'C:\\temp\\oracletmp_' ~ release ~ '\\',
                  'homes'      : 'C:\\Users\\',
                  'command'    : '\\sqldeveloper',
                  'arch'       : 'no-jre',
-                 'oracle:home': 'C:\\oracle\\' ~ release ~ '\\',
-                 'oracle:md5' : { 'sqldeveloper': 'md5=5e077af62c1c5a526055cd9f810a3ee0',
-                                  'sqlcl': 'md5=65862f2a970a363a62e1053dc8251078', },
-     },
+        },
     'Darwin' : { 'homes'      : '/Users/',
                  'arch'       : 'macosx.app',
-                 'oracle:md5' : { 'sqldeveloper': 'md5=2969c67ea5b856655adff9b8695746f1',
-                                  'sqlcl': 'md5=65862f2a970a363a62e1053dc8251078', },
-     },
+        },
+  }, grain='kernel', default='Linux')
+%} 
+
+{% set md5map = salt['grains.filter_by']({
+    'Linux'  : { 'sqldeveloper': 'md5=5e077af62c1c5a526055cd9f810a3ee0',
+                 'sqlcl'       : 'md5=65862f2a970a363a62e1053dc8251078',
+        },
+    'Windows': { 'sqldeveloper': 'md5=5e077af62c1c5a526055cd9f810a3ee0',
+                 'sqlcl'       : 'md5=65862f2a970a363a62e1053dc8251078',
+        },
+    'Darwin' : { 'sqldeveloper': 'md5=2969c67ea5b856655adff9b8695746f1',
+                 'sqlcl'       : 'md5=65862f2a970a363a62e1053dc8251078',
+        },
   }, grain='kernel', default='Linux')
 %} 
 
 # Merge osmap onto defaults before merging pillars
-{% do defs.sqldeveloper.update(osmap) %}
+{% do defs.sqldeveloper.update( osmap ) %}
+{% do defs.sqldeveloper.oracle.md5.update( md5map ) %}
+
 {% set sqldeveloper = salt['pillar.get']( 'sqldeveloper', default=defs.sqldeveloper, merge=True) %}
 
 # Get user's group name from pillar or 'id' command
@@ -47,4 +53,8 @@
                          'realhome': sqldeveloper.prefix ~ 'sqldeveloper',
                          'realcmd' : sqldeveloper.prefix ~ 'sqldeveloper' ~ sqldeveloper.command,  })
 %}
+
+{% if grains.os == 'Windows' %}
+    {% do sqldeveloper.oracle.update({ 'home': 'C:\\oracle\\{0}\\'.format(release), }) %}
+{% endif %}
 
