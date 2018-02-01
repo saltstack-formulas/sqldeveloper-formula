@@ -30,6 +30,7 @@ sqldeveloper:
 
   prefs:
     user:
+    group:
     #See http://www.thatjeffsmith.com/archive/2014/05/migrating-oracle-sql-developer-connections-with-passwords/
     xmlurl: 
     xmldir:

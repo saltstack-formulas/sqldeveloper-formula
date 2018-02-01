@@ -34,6 +34,14 @@
 # Merge osmap onto defaults before merging pillars
 {% do defs.sqldeveloper.update(osmap) %}
 {% set sqldeveloper = salt['pillar.get']( 'sqldeveloper', default=defs.sqldeveloper, merge=True) %}
+
+# Get user's group name from pillar or 'id' command
+{%- if not sqldeveloper.prefs.group %}
+   {%- set usergroup = salt['cmd.run']('id -gn', runas=sqldeveloper.prefs.user, output_loglevel='quiet',) or None %}
+   {%- do sqldeveloper.prefs.update({'group': usergroup,}) %}
+{% endif %}
+
+# Finish mapping
 {% do sqldeveloper.oracle.update({ 'release' : release,
                          'uri'     : sqldeveloper.oracle.uri,
                          'realhome': sqldeveloper.prefix ~ 'sqldeveloper',
