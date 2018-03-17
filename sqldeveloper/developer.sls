@@ -1,5 +1,9 @@
 {% from "sqldeveloper/map.jinja" import sqldeveloper with context %}
 
+  {% if grains.os == 'MacOS' %}
+    {% set macgroup = salt['cmd.run']("stat -f '%Sg' /dev/console") %}
+  {% endif %}
+
 {% if sqldeveloper.prefs.user %}
    {% if grains.os != 'Windows' %}
 
@@ -75,9 +79,13 @@ sqldeveloper-product-conf-permissions:
     - name: {{ sqldeveloper.homes }}/{{ sqldeveloper.prefs.user }}/.sqldeveloper
     - mode:  744
     - user: {{ sqldeveloper.prefs.user }}
-       {% if sqldeveloper.prefs.group and grains.os not in ('MacOS',) %}
+    {% if grains.os_family in ('Suse',) or grains.os in ('SUSE',) %}
+    - group: users
+    {% elseif grains.os_family == 'MacOS' %}
+    - group: {{ macgroup }}
+    {% else %}
     - group: {{ sqldeveloper.prefs.group }}
-       {% endif %}
+    {% endif %}
     - recurse:
       - user
       - group
@@ -95,9 +103,13 @@ sqldeveloper-prefs-xmlfile:
     - source: {{ sqldeveloper.prefs.xmldir }}/{{ sqldeveloper.prefs.xmlfile }}
     - user: {{ sqldeveloper.prefs.user }}
     - makedirs: True
-       {% if sqldeveloper.prefs.group and grains.os not in ('MacOS',) %}
+        {% if grains.os_family in ('Suse',) %}
+    - group: users
+        {% elseif grains.os_family == 'MacOS' %}
+    - group: {{ macgroup }}
+        {% else %}
     - group: {{ sqldeveloper.prefs.group }}
-       {% endif %}
+        {% endif %}
     - if_missing: {{ sqldeveloper.homes }}/{{ sqldeveloper.prefs.user }}/{{ sqldeveloper.prefs.xmlfile }}
   cmd.run:
     - unless: test -f {{ sqldeveloper.prefs.xmldir }}/{{ sqldeveloper.prefs.xmlfile }}
