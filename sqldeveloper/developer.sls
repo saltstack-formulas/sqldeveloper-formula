@@ -12,10 +12,9 @@ sqldeveloper-desktop-shortcut-clean:
     - name: '{{ sqldeveloper.homes }}/{{ sqldeveloper.prefs.user }}/Desktop/SqlDeveloper'
     - require_in:
       - file: sqldeveloper-desktop-shortcut-add
-  {% endif %}
+    - onlyif: test "`uname`" = "Darwin"
 
 sqldeveloper-desktop-shortcut-add:
-  {% if grains.os == 'MacOS' %}
   file.managed:
     - name: /tmp/mac_shortcut.sh
     - source: salt://sqldeveloper/files/mac_shortcut.sh
@@ -24,23 +23,25 @@ sqldeveloper-desktop-shortcut-add:
     - context:
       user: {{ sqldeveloper.prefs.user }}
       homes: {{ sqldeveloper.homes }}
+    - onlyif: test "`uname`" = "Darwin"
   cmd.run:
     - name: /tmp/mac_shortcut.sh
     - runas: {{ sqldeveloper.prefs.user }}
     - require:
       - file: sqldeveloper-desktop-shortcut-add
-  {% elif grains.os not in ('Windows',) %}
-  #Linux
+    - require_in:
+      - file: sqldeveloper-desktop-shortcut-install
+    - onlyif: test "`uname`" = "Darwin"
+
+sqldeveloper-desktop-shortcut-install:
   file.managed:
     - source: salt://sqldeveloper/files/sqldeveloper.desktop
     - name: {{ sqldeveloper.homes }}/{{ sqldeveloper.prefs.user }}/Desktop/sqldeveloper.desktop
-    - user: {{ sqldeveloper.prefs.user }}
     - makedirs: True
-      {% if grains.os_family in ('Suse',) %} 
-    - group: users
-      {% else %}
-    - group: {{ sqldeveloper.prefs.user }}
-      {% endif %}
+    - user: {{ sqldeveloper.prefs.user }}
+       {% if sqldeveloper.prefs.group and grains.os not in ('MacOS',) %}
+    - group: {{ sqldeveloper.prefs.group }}
+       {% endif %}
     - mode: 644
     - force: True
     - template: jinja
@@ -54,12 +55,22 @@ sqldeveloper-product-conf-dir:
   file.directory:
     - name: {{ sqldeveloper.homes }}/{{ sqldeveloper.prefs.user }}/.sqldeveloper/{{ sqldeveloper.oracle.release }}
     - makedirs: True
+    - user: {{ sqldeveloper.prefs.user }}
+       {% if sqldeveloper.prefs.group and grains.os not in ('MacOS',) %}
+    - group: {{ sqldeveloper.prefs.group }}
+       {% endif %}
+    - mode: 644
     - require_in:
       - file: sqldeveloper-product-conf
 
 sqldeveloper-product-conf:
   file.managed:
     - name: {{ sqldeveloper.homes }}/{{ sqldeveloper.prefs.user }}/.sqldeveloper/{{ sqldeveloper.oracle.release }}/product.conf
+    - user: {{ sqldeveloper.prefs.user }}
+       {% if sqldeveloper.prefs.group and grains.os not in ('MacOS',) %}
+    - group: {{ sqldeveloper.prefs.group }}
+       {% endif %}
+    - mode: 644
     - contents:
       - SetJavaHome /usr/lib/java
 
@@ -73,7 +84,7 @@ sqldeveloper-product-conf-permissions:
     {% elseif grains.os_family == 'MacOS' %}
     - group: {{ macgroup }}
     {% else %}
-    - group: {{ sqldeveloper.prefs.user }}
+    - group: {{ sqldeveloper.prefs.group }}
     {% endif %}
     - recurse:
       - user
@@ -82,14 +93,10 @@ sqldeveloper-product-conf-permissions:
     - onchanges:
       - sqldeveloper-product-conf-dir
 
-  {% endif %}
-
-
-  {% if sqldeveloper.prefs.xmlurl or sqldeveloper.prefs.xmldir %}
-    {% set connections_xml = sqldeveloper.homes ~ '/' ~ sqldeveloper.prefs.user ~ '/' ~ sqldeveloper.prefs.xmlfile %}
+      {% if sqldeveloper.prefs.xmlurl or sqldeveloper.prefs.xmldir %}
+         {% set connections_xml = sqldeveloper.homes ~ '/' ~ sqldeveloper.prefs.user ~ '/' ~ sqldeveloper.prefs.xmlfile %}
 
 sqldeveloper-prefs-xmlfile:
-    {% if sqldeveloper.prefs.xmldir %}
   file.managed:
     - onlyif: test -f {{ sqldeveloper.prefs.xmldir }}/{{ sqldeveloper.prefs.xmlfile }}
     - name: {{ sqldeveloper.homes }}/{{ sqldeveloper.prefs.user }}/{{ sqldeveloper.prefs.xmlfile }}
@@ -101,17 +108,16 @@ sqldeveloper-prefs-xmlfile:
         {% elseif grains.os_family == 'MacOS' %}
     - group: {{ macgroup }}
         {% else %}
-    - group: {{ sqldeveloper.prefs.user }}
+    - group: {{ sqldeveloper.prefs.group }}
         {% endif %}
     - if_missing: {{ sqldeveloper.homes }}/{{ sqldeveloper.prefs.user }}/{{ sqldeveloper.prefs.xmlfile }}
-    {% else %}
   cmd.run:
+    - unless: test -f {{ sqldeveloper.prefs.xmldir }}/{{ sqldeveloper.prefs.xmlfile }}
     - name: curl -o {{ connections_xml }} {{sqldeveloper.prefs.xmlurl}}
     - runas: {{ sqldeveloper.prefs.user }}
     - if_missing: {{ connections_xml }}
-    {% endif %}
+      {% endif %}
 
-  {% endif %}
-
+   {% endif %}
 {% endif %}
 

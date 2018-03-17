@@ -1,6 +1,6 @@
 #Default Look Dictionary
 sqldeveloper:
-  prefix: /usr/share/oracle
+  prefix: /usr/local/oracle
   tmpdir: /tmp/oracletmp/
   command: /sqldeveloper
   homes: /home
@@ -8,20 +8,22 @@ sqldeveloper:
 
   oracle:
     home: /opt/oracle/12_2
-    #Override 'uri' to avoid oracle login
+    #Override "uri" to avoid oracle login
     uri: http://download.oracle.com/otn/java/sqldeveloper/
     #See oracle numbering: https://docs.oracle.com/cd/B28359_01/server.111/b28310/dba004.htm
     version: 17.3.1.279.0537
     #See available packages: http://www.oracle.com/technetwork/developer-tools/sql-developer/overview/index.html
-    pkgs: ['sqldeveloper', 'sqlcl']
+    pkgs: ['sqldeveloper', 'sqlcl',]
+    md5:
+      sqldeveloper: md5=5e077af62c1c5a526055cd9f810a3ee0
+      sqlcl: md5=65862f2a970a363a62e1053dc8251078
 
   dl:
+    archive_type: zip
+    suffix: zip
     opts: -s -L
-    #'unpack_opts z' not working (unzip complains "caution: not extracting; -d ignored").
     interval: 30
     retries: 1
-    suffix: zip
-    skip_hashcheck:
 
   linux:
     symlink: /usr/bin/sqldeveloper
@@ -30,6 +32,7 @@ sqldeveloper:
 
   prefs:
     user:
+    group:
     #See http://www.thatjeffsmith.com/archive/2014/05/migrating-oracle-sql-developer-connections-with-passwords/
     xmlurl: 
     xmldir:
