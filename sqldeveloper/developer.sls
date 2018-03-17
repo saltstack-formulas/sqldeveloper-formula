@@ -81,7 +81,7 @@ sqldeveloper-product-conf-permissions:
     - user: {{ sqldeveloper.prefs.user }}
     {% if grains.os_family in ('Suse',) or grains.os in ('SUSE',) %}
     - group: users
-    {% elseif grains.os_family == 'MacOS' %}
+    {% elif grains.os_family == 'MacOS' %}
     - group: {{ macgroup }}
     {% else %}
     - group: {{ sqldeveloper.prefs.group }}
@@ -105,7 +105,7 @@ sqldeveloper-prefs-xmlfile:
     - makedirs: True
         {% if grains.os_family in ('Suse',) %}
     - group: users
-        {% elseif grains.os_family == 'MacOS' %}
+        {% elif grains.os_family == 'MacOS' %}
     - group: {{ macgroup }}
         {% else %}
     - group: {{ sqldeveloper.prefs.group }}
