@@ -1,8 +1,12 @@
 {% from "sqldeveloper/map.jinja" import sqldeveloper with context %}
 
-{% if sqldeveloper.prefs.user not in (None, 'undefined', 'undefined_user', '',) %}
-
   {% if grains.os == 'MacOS' %}
+    {% set macgroup = salt['cmd.run']("stat -f '%Sg' /dev/console") %}
+  {% endif %}
+
+{% if sqldeveloper.prefs.user %}
+   {% if grains.os != 'Windows' %}
+
 sqldeveloper-desktop-shortcut-clean:
   file.absent:
     - name: '{{ sqldeveloper.homes }}/{{ sqldeveloper.prefs.user }}/Desktop/SqlDeveloper'
@@ -66,6 +70,8 @@ sqldeveloper-product-conf-permissions:
     - user: {{ sqldeveloper.prefs.user }}
     {% if grains.os_family in ('Suse',) or grains.os in ('SUSE',) %}
     - group: users
+    {% elseif grains.os_family == 'MacOS' %}
+    - group: {{ macgroup }}
     {% else %}
     - group: {{ sqldeveloper.prefs.user }}
     {% endif %}
@@ -92,8 +98,9 @@ sqldeveloper-prefs-xmlfile:
     - makedirs: True
         {% if grains.os_family in ('Suse',) %}
     - group: users
-        {% elif grains.os not in ('MacOS',) %}
-        #inherit Darwin ownership
+        {% elseif grains.os_family == 'MacOS' %}
+    - group: {{ macgroup }}
+        {% else %}
     - group: {{ sqldeveloper.prefs.user }}
         {% endif %}
     - if_missing: {{ sqldeveloper.homes }}/{{ sqldeveloper.prefs.user }}/{{ sqldeveloper.prefs.xmlfile }}
