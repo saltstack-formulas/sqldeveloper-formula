@@ -11,7 +11,6 @@ sqldeveloper-create-extract-dirs:
     - group: root
     - mode: 755
   {% endif %}
-    - clean: True
     - makedirs: True
 
 {% for pkg in sqldeveloper.oracle.pkgs %}
@@ -20,11 +19,14 @@ sqldeveloper-create-extract-dirs:
 
 sqldeveloper-extract-{{ pkg }}:
   cmd.run:
-    - name: curl {{sqldeveloper.dl.opts}} -o '{{ sqldeveloper.tmpdir }}{{ pkg }}.{{sqldeveloper.dl.suffix}}' {{ url }}
+    - name: curl {{sqldeveloper.dl.opts}} -o {{ sqldeveloper.tmpdir }}{{ pkg }}.{{sqldeveloper.dl.suffix}} {{ url }}
+    - onlyif: test -f {{ sqldeveloper.tmpdir }}{{ pkg }}.{{sqldeveloper.dl.suffix}}
     {% if grains['saltversioninfo'] >= [2017, 7, 0] %}
     - retry:
       attempts: {{ sqldeveloper.dl.retries }}
       interval: {{ sqldeveloper.dl.interval }}
+      until: True
+      splay: 10
     {% endif %}
     {%- if grains['saltversioninfo'] <= [2016, 11, 6] %}
       # Check local archive using hashstring for older Salt
@@ -33,7 +35,7 @@ sqldeveloper-extract-{{ pkg }}:
     - name: file.check_hash
     - path: '{{ sqldeveloper.tmpdir }}{{ pkg }}.{{ sqldeveloper.dl.suffix }}'
     - file_hash: {{ sqldeveloper.oracle.md5[ pkg ] }}
-    - onchanges:
+    - require:
       - cmd: sqldeveloper-extract-{{ pkg }}
     - require_in:
       - archive: sqldeveloper-extract-{{ pkg }}
@@ -52,14 +54,8 @@ sqldeveloper-extract-{{ pkg }}:
          #Check local archive using hashstring or hashurl
     - source_hash: {{ sqldeveloper.oracle.md5[ pkg ] }}
         {% endif %}
-    - onchanges:
-      - cmd: sqldeveloper-extract-{{ pkg }}
     - require_in:
       - file: sqldeveloper-extract-{{ pkg }}
-  file.absent:
-    - name: '{{sqldeveloper.tmpdir}}/{{ pkg }}.{{sqldeveloper.dl.suffix}}'
-    - onchanges:
-      - archive: sqldeveloper-extract-{{ pkg }}
   {% if grains.os == 'MacOS' %}
     - require_in:
       - macpackage: sqldeveloper-install-sqldeveloper
@@ -78,8 +74,5 @@ sqldeveloper-install-sqldeveloper:
     - allow_untrusted: True
     - require_in:
       - file: sqldeveloper-install-sqldeveloper
-  file.absent:
-     # source macapp no longer needed
-    - name: '{{ sqldeveloper.prefix }}/SQLDeveloper.app'
   {% endif %}
 
