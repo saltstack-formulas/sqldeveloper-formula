@@ -19,8 +19,8 @@ sqldeveloper-create-extract-dirs:
 
 sqldeveloper-extract-{{ pkg }}:
   cmd.run:
-    - name: curl {{sqldeveloper.dl.opts}} -o {{ sqldeveloper.tmpdir }}{{ pkg }}.{{sqldeveloper.dl.suffix}} {{ url }}
-    - onlyif: test -f {{ sqldeveloper.tmpdir }}{{ pkg }}.{{sqldeveloper.dl.suffix}}
+    - name: curl {{sqldeveloper.dl.opts}} -o {{ sqldeveloper.tmpdir }}/{{ pkg }}.{{sqldeveloper.dl.suffix}} {{ url }}
+    - unless: test -f {{ sqldeveloper.tmpdir }}/{{ pkg }}.{{sqldeveloper.dl.suffix}}
     {% if grains['saltversioninfo'] >= [2017, 7, 0] %}
     - retry:
       attempts: {{ sqldeveloper.dl.retries }}
