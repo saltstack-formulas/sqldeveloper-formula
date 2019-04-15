@@ -49,6 +49,9 @@ sqldeveloper-home-alt-install:
     - priority: {{ sqldeveloper.linux.altpriority }}
     - require:
       - file: sqldeveloper-home-alt-install
+    - retry:
+        attempts: 2
+        until: True
 
 sqldeveloper-home-alt-set:
   alternatives.set:
@@ -56,6 +59,9 @@ sqldeveloper-home-alt-set:
     - path: {{ sqldeveloper.oracle.realhome }}
     - onchanges:
       - alternatives: sqldeveloper-home-alt-install
+    - retry:
+        attempts: 2
+        until: True
 
 # Add to alternatives system
 sqldeveloper-alt-install:
@@ -67,6 +73,9 @@ sqldeveloper-alt-install:
     - require:
       - alternatives: sqldeveloper-home-alt-install
       - alternatives: sqldeveloper-home-alt-set
+    - retry:
+        attempts: 2
+        until: True
 
 sqldeveloper-alt-set:
   alternatives.set:
@@ -74,6 +83,9 @@ sqldeveloper-alt-set:
     - path: {{ sqldeveloper.oracle.realcmd }}
     - onchanges:
       - alternatives: sqldeveloper-alt-install
+    - retry:
+        attempts: 2
+        until: True
 
      {% endif %}
   {% endif %}
