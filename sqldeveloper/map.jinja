@@ -1,60 +1,35 @@
 # -*- coding: utf-8 -*-
 # vim: ft=jinja
 
-# Start with defaults from defaults.yaml 
-{% import_yaml 'sqldeveloper/defaults.yaml' as defs %}
+{%- set tplroot = tpldir.split('/')[0] %}
+{%- import_yaml tplroot ~ "/defaults.yaml" as default_settings %}
+{%- import_yaml tplroot ~ "/osfamilymap.yaml" as osfamilymap %}
 
-{% set version = salt['pillar.get']('sqldeveloper:oracle:version', defs.sqldeveloper.oracle.version ) %}
-{% set release = version.split('.')[0] ~ '_' ~ version.split('.')[1] ~ '_' ~ version.split('.')[2] %} 
-
-{% set osmap = salt['grains.filter_by']({
-    'Linux'  : { 'prefix'     : defs.sqldeveloper.prefix ~ '/' ~ release ~ '/',
-        },
-    'Windows': { 'prefix'     : 'C:\\oracle\\' ~ release ~ '\\',
-                 'tmpdir'     : 'C:\\temp\\oracletmp_' ~ release ~ '\\',
-                 'homes'      : 'C:\\Users\\',
-                 'command'    : '\\sqldeveloper',
-                 'arch'       : 'no-jre',
-        },
-    'Darwin' : { 'homes'      : '/Users/',
-                 'arch'       : 'macosx.app',
-        },
-  }, grain='kernel', default='Linux')
-%} 
-
-{% set md5map = salt['grains.filter_by']({
-    'Linux'  : { 'sqldeveloper': 'md5=5e077af62c1c5a526055cd9f810a3ee0',
-                 'sqlcl'       : 'md5=65862f2a970a363a62e1053dc8251078',
-        },
-    'Windows': { 'sqldeveloper': 'md5=5e077af62c1c5a526055cd9f810a3ee0',
-                 'sqlcl'       : 'md5=65862f2a970a363a62e1053dc8251078',
-        },
-    'Darwin' : { 'sqldeveloper': 'md5=2969c67ea5b856655adff9b8695746f1',
-                 'sqlcl'       : 'md5=65862f2a970a363a62e1053dc8251078',
-        },
-  }, grain='kernel', default='Linux')
-%} 
-
-# Merge osmap onto defaults before merging pillars
-{% do defs.sqldeveloper.update( osmap ) %}
-{% do defs.sqldeveloper.oracle.md5.update( md5map ) %}
-
-{% set sqldeveloper = salt['pillar.get']( 'sqldeveloper', default=defs.sqldeveloper, merge=True) %}
-
-# Get user's group name from pillar or 'id' command
-{%- if not sqldeveloper.prefs.group %}
-   {%- set usergroup = salt['cmd.run']('id -gn', runas=sqldeveloper.prefs.user, output_loglevel='quiet',) or None %}
-   {%- do sqldeveloper.prefs.update({'group': usergroup,}) %}
-{% endif %}
-
-# Finish mapping
-{% do sqldeveloper.oracle.update({ 'release' : release,
-                         'uri'     : sqldeveloper.oracle.uri,
-                         'realhome': sqldeveloper.prefix ~ 'sqldeveloper',
-                         'realcmd' : sqldeveloper.prefix ~ 'sqldeveloper' ~ sqldeveloper.command,  })
+{%- set _config = salt['config.get'](tplroot, default={}) %}
+{%- set defaults = salt['grains.filter_by'](
+      default_settings,
+      default=tplroot,
+      merge=salt['grains.filter_by']( osfamilymap, grain='os_family',
+        merge=salt['grains.filter_by']( _config, default='lookup'
+        )
+      )
+    )
 %}
+{%- set s = salt['grains.filter_by']( {'defaults': defaults}, default='defaults', merge=_config) %}
 
-{% if grains.os == 'Windows' %}
-    {% do sqldeveloper.oracle.update({ 'home': 'C:\\oracle\\{0}\\'.format(release), }) %}
-{% endif %}
+{%- for name in s.pkg.wanted %}
+    {% set url = s.pkg.uri ~ '/' ~ name ~ '-' ~ s.version ~ '-' ~ s.flavour  ~ '.' ~ s.pkg.suffix %}  # noqa 204
+    {%- do s.pkg.urls.update({ '%s'|format(name): url }) %}
+{%- endfor %}
 
+{%- if s.pkg.use_upstream_archive %}
+    {%- do s.pkg.archive.update({'name': s.dir.archive ~ '/' ~ s.release }) %}
+    {%- do s.update({ 'path': s.pkg.archive.name ~ '/s' }) %}
+{%- endif %}
+
+{%- if s.pkg.use_upstream_macapp %}
+    {%- do s.pkg.macapp.update({'name': s.dir.macapp ~ '/' ~ s.release }) %}
+    {%- do s.update({ 'path': s.pkg.macapp.name ~ '/s' }) %}
+{%- endif %}
+
+{%- set sqldeveloper = s %}
