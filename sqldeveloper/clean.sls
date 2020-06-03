@@ -7,9 +7,9 @@
 {%- from tplroot ~ "/map.jinja" import sqldeveloper with context %}
 
 include:
-  - .{{ 'macapp' if sqldeveloper.pkg.use_upstream_macapp else 'archive' }}
-  - .config
-  - .linuxenv
+  - .{{ 'macapp' if sqldeveloper.pkg.use_upstream_macapp else 'archive' }}.clean
+  - .config.clean
+  - .linuxenv.clean
 
     {%- else %}
 

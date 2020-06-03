@@ -1,0 +1,59 @@
+# -*- coding: utf-8 -*-
+# vim: ft=yaml
+#
+# Setup variables using grains['os_family'] based logic.
+# You just need to add the key:values for an `os_family` that differ
+# from `defaults.yaml`.
+# Only add an `os_family` which is/will be supported by the formula
+#
+# If you do not need to provide defaults via the `os_family` grain,
+# you will need to provide at least an empty dict in this file, e.g.
+# osfamilymap: {}
+---
+{%- if grains.os == 'MacOS' %}
+    {%- set macos_rootuser = salt['cmd.run']("stat -f '%Su' /dev/console") %}
+    {%- set macos_rootgroup = salt['cmd.run']("stat -f '%Sg' /dev/console") %}
+{%- endif %}
+
+Debian:
+  pkg:
+    deps:
+      - tar
+
+RedHat:
+  pkg:
+    deps:
+      - tar
+
+Suse:
+  pkg:
+    deps:
+      - tar
+
+Windows:
+  flavour: no-jre
+  command: \\sqldeveloper.exe
+  dir:
+    archive: C:\\Program files\\oracle\\
+    tmp: C:\\temp\\sqldeveloper_tmp\\
+    homes: C:\\Users
+  pkg:
+    checksums:
+      sqldeveloper: md5=5e077af62c1c5a526055cd9f810a3ee0
+      sqlcl: md5=65862f2a970a363a62e1053dc8251078
+
+MacOS:
+  flavour: 'macosx.app'
+  identity:
+    rootuser: {{ macos_rootuser | d('') }}
+    rootgroup: {{ macos_rootgroup | d('') }}
+    user: {{ macos_rootuser | d('') }}
+  environ_file: /etc/defaults/sqldeveloper.sh
+  dir:
+    homes: /Users
+  pkg:
+    use_upstream_macapp: true
+    use_upstream_archive: false
+    checksums:
+      sqldeveloper: md5=2969c67ea5b856655adff9b8695746f1
+      sqlcl: md5=65862f2a970a363a62e1053dc8251078
