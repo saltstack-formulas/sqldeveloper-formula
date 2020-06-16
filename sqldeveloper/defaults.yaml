@@ -1,39 +1,65 @@
-#Default Look Dictionary
+# -*- coding: utf-8 -*-
+# vim: ft=yaml
+---
 sqldeveloper:
-  prefix: /usr/local/oracle
-  tmpdir: /tmp/oracletmp/
-  command: /sqldeveloper
-  homes: /home
-  arch: no-jre
+  edition: ''
+  flavour: no-jre
+  release: '12_2'    # quotes
+  version: 17.3.1.279.0537
+  command: /sqldeveloper.sh
+  environ_file: /etc/default/sqldeveloper.sh
+  environ: []
 
-  oracle:
-    home: /opt/oracle/12_2
-    #Override "uri" to avoid oracle login
-    uri: http://download.oracle.com/otn/java/sqldeveloper/
-    #See oracle numbering: https://docs.oracle.com/cd/B28359_01/server.111/b28310/dba004.htm
-    version: 17.3.1.279.0537
-    #See available packages: http://www.oracle.com/technetwork/developer-tools/sql-developer/overview/index.html
-    pkgs: ['sqldeveloper', 'sqlcl',]
-    md5:
+  pkg:
+    name: Sqldeveloper
+    use_upstream_archive: true
+    use_upstream_macapp: false
+    deps:
+      - curl
+      - gzip
+    suffix: zip
+    # in real world, this cannot work (oracle login)
+    uri: http://download.oracle.com/otn/java/sqldeveloper
+    macapp:
+      name: null
+    archive:
+      name: null
+    wanted:
+      - sqldeveloper
+      - sqlcl
+    urls: {}
+    checksums:
       sqldeveloper: md5=5e077af62c1c5a526055cd9f810a3ee0
       sqlcl: md5=65862f2a970a363a62e1053dc8251078
+  prefs:
+    # http://www.thatjeffsmith.com/archive/2014/05/migrating-oracle-sql-developer-connections-with-passwords/
+    xmlurl: null
+    xmldir: null
+    xmlfile: connections-with-passwords.xml
 
-  dl:
-    archive_type: zip
-    suffix: zip
-    opts: -s -L
-    interval: 30
-    retries: 1
+  dir:
+    archive: /usr/local/oracle
+    macapp: /usr/local/oracle
+    homes: /home
+    tmp: /tmp/oracle/sqldeveloper
+
+  identity:
+    rootuser: root
+    rootgroup: root
+    user: undefined_user
+
+  retry_option:
+    # https://docs.saltstack.com/en/latest/ref/states/requisites.html#retrying-states
+    attempts: 2
+    until: true
+    interval: 10
+    splay: 10
 
   linux:
-    symlink: /usr/bin/sqldeveloper
-    #debian alternatives is disabled by default. Activated via pillar value.
+    ldconfig: false
+    symlink: /usr/local/bin/sqldeveloper
     altpriority: 0
-
-  prefs:
-    user:
-    group:
-    #See http://www.thatjeffsmith.com/archive/2014/05/migrating-oracle-sql-developer-connections-with-passwords/
-    xmlurl: 
-    xmldir:
-    xmlfile: connections-with-passwords.xml
+    # On freedesktop.org-compliant desktops, enable Icon on Linux launchers.
+    # Place a .desktop file in e.g. /usr/share/applications
+    install_desktop_file: true
+    desktop_file: /usr/share/applications/sqldeveloper.desktop

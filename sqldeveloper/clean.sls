@@ -2,14 +2,13 @@
 # vim: ft=sls
 
     {%- if grains.kernel|lower in ('linux', 'darwin',) %}
-
         {%- set tplroot = tpldir.split('/')[0] %}
         {%- from tplroot ~ "/map.jinja" import sqldeveloper with context %}
 
 include:
-  - .{{ 'macapp' if sqldeveloper.pkg.use_upstream_macapp else 'archive' }}
-  - .config
-  - .linuxenv
+  - .{{ 'macapp' if sqldeveloper.pkg.use_upstream_macapp else 'archive' }}.clean
+  - .config.clean
+  - .linuxenv.clean
 
     {%- else %}
 

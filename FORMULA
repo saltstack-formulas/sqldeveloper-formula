@@ -1,8 +1,9 @@
 name: sqldeveloper
-os: MacOS, Windows, Linux
-os_family: RedHat, Debian, Suse, FreeBSD, MacOS, Windows
-version: 201710
-release: 1.1
-minimum_version: 2016.3
-summary: Formula for installing sqldeveloper
-description: Formula for installing SqlDeveloper
+os: Debian, Ubuntu, Raspbian, RedHat, Fedora, CentOS, Amazon, Suse, openSUSE, Gentoo, Funtoo, Arch, Manjaro, Alpine, FreeBSD, OpenBSD, Solaris, SmartOS, Windows, MacOS
+os_family: Debian, RedHat, Suse, Gentoo, Arch, Alpine, FreeBSD, OpenBSD, Solaris, Windows, MacOS
+version: 0.2.2
+release: 1
+minimum_version: 2019.2
+summary: sqldeveloper formula
+description: Formula to install sqldeveloper and configure it
+top_level_dir: sqldeveloper
