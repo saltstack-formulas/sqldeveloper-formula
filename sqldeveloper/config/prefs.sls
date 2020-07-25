@@ -15,7 +15,7 @@
 include:
   - {{ sls_package_install }}
 
--config-file-managed-prefs_file:
+sqldeveloper-config-file-managed-prefs_file:
   cmd.run:
     - name: curl -L -o {{ file }} {{ s.prefs.xmlurl }}
     - runas: {{ s.identity.user }}
