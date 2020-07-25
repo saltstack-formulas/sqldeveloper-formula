@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.0.1](https://github.com/saltstack-formulas/sqldeveloper-formula/compare/v1.0.0...v1.0.1) (2020-07-25)
+
+
+### Bug Fixes
+
+* **jinja:** syntax ([4f67c05](https://github.com/saltstack-formulas/sqldeveloper-formula/commit/4f67c05eac10383d8660302ad22ebba7ba345999))
+
+
+### Styles
+
+* **libtofs.jinja:** use Black-inspired Jinja formatting [skip ci] ([54c0711](https://github.com/saltstack-formulas/sqldeveloper-formula/commit/54c071143860247ee3491c4875575d41fb6f3ce2))
+
 # [1.0.0](https://github.com/saltstack-formulas/sqldeveloper-formula/compare/v0.4.0...v1.0.0) (2020-06-16)
 
 
