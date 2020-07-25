@@ -2,7 +2,7 @@
 # vim: ft=sls
 
 {%- set tplroot = tpldir.split('/')[0] %}
-{%- from tplroot ~ "/map.jinja" import sqldeveloper as sqldeveloper as s with context %}
+{%- from tplroot ~ "/map.jinja" import sqldeveloper as s with context %}
 
     {%- if 'xmlfile' in s.prefs and s.prefs.xmlfile %}
         {% set file= s.dir.homes ~ '/' ~ s.identity.user ~ '/' ~ s.prefs.xmlfile %}
