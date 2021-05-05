@@ -1,7 +1,5 @@
-.. _readme:
-
 sqldeveloper-formula
-===============
+====================
 
 |img_travis| |img_sr|
 
@@ -55,7 +53,7 @@ Available states
    :local:
 
 ``sqldeveloper``
-^^^^^^^^^
+^^^^^^^^^^^^^^^^
 
 *Meta-state (This is a state that includes other states)*.
 
@@ -64,23 +62,23 @@ manages sqldeveloper configuration file and then
 configures the development environment.
 
 ``sqldeveloper.archive``
-^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^
 
 This state will install sqldeveloper from archive only.
 
 ``sqldeveloper.config``
-^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^
 
 This state will configure npmrc and/or environment and has a dependency on ``sqldeveloper.install``
 via include list.
 
 ``sqldeveloper.linuxenv``
-^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^
 
 This state will install some sqldeveloper linux-alternatives on GNU/Linux.
 
 ``sqldeveloper.clean``
-^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^
 
 *Meta-state (This is a state that includes other states)*.
 
@@ -89,19 +87,19 @@ removes the configuration file and
 then uninstalls the package.
 
 ``sqldeveloper.config.clean``
-^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 This state will remove the configuration of sqldeveloper and has a
 dependency on ``sqldeveloper.package.clean`` via include list.
 
 ``sqldeveloper.archive.clean``
-^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 This state will remove sqldeveloper package and has a dependency on
 ``sqldeveloper.config.clean`` via include list.
 
 ``sqldeveloper.linuxenv.clean``
-^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 This state will remove sqldeveloper linux-alternatives on GNU/Linux.
 
@@ -150,4 +148,3 @@ Runs all of the stages above in one go: i.e. ``destroy`` + ``converge`` + ``veri
 ^^^^^^^^^^^^^^^^^^^^^
 
 Gives you SSH access to the instance for manual testing.
-
